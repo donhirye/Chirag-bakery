@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Order Father's Day cakes, cookies, and bakery treats with door-to-door delivery.">
+  <title>Chirag's Bakery — Father's Day Orders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo" data-scroll-top>
+        <span class="logo-icon" aria-hidden="true">&#9733;</span>
+        <span class="logo-text" id="brand-name">Chirag's Bakery</span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#products" class="nav-link">Menu</a>
+        <a href="#order" class="nav-link nav-link--cta">Order Now</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="container hero-content">
+        <span class="hero-badge">Father's Day Special</span>
+        <h1 class="hero-title">
+          <span id="hero-headline">Sweet treats for Dad</span>
+          <em id="hero-subheadline">delivered to your door</em>
+        </h1>
+        <p class="hero-description" id="hero-description">
+          Celebrate Father's Day with freshly baked cakes, buttery cookies, and artisan pastries made with love.
+        </p>
+        <div class="hero-actions">
+          <a href="#order" class="btn btn-primary">Place an Order</a>
+          <a href="#products" class="btn btn-secondary">View Menu</a>
+        </div>
+        <a href="#products" class="scroll-cue" aria-label="Scroll to menu">
+          <span class="scroll-cue-text">Explore our menu</span>
+          <span class="scroll-cue-arrow" aria-hidden="true">&#8595;</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="products section" id="products">
+      <div class="container">
+        <header class="section-header reveal">
+          <span class="section-label">Our Menu</span>
+          <h2 class="section-title">Baked with care, made for Dad</h2>
+          <p class="section-subtitle">Select your favorites below — or describe a custom order in the form.</p>
+        </header>
+        <div class="product-grid" id="product-grid" role="list">
+          <!-- Products rendered by main.js -->
+        </div>
+      </div>
+    </section>
+
+    <section class="order section" id="order">
+      <div class="container">
+        <header class="section-header reveal">
+          <span class="section-label">Order Form</span>
+          <h2 class="section-title">Door-to-door delivery</h2>
+          <p class="section-subtitle">Fill out the form below and we'll bring your treats straight to you.</p>
+        </header>
+
+        <form class="order-form reveal" id="order-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customer-name">Your name <span class="required">*</span></label>
+              <input type="text" id="customer-name" name="name" autocomplete="name" required placeholder="Full name">
+              <span class="form-error" id="error-name" role="alert"></span>
+            </div>
+            <div class="form-group">
+              <label for="customer-phone">Phone number <span class="required">*</span></label>
+              <input type="tel" id="customer-phone" name="phone" autocomplete="tel" required placeholder="(555) 123-4567">
+              <span class="form-error" id="error-phone" role="alert"></span>
+            </div>
+          </div>
+
+          <fieldset class="form-group form-fieldset">
+            <legend>What do you want to buy? <span class="required">*</span></legend>
+            <p class="form-hint">Select items from our menu and/or describe custom requests below.</p>
+            <div class="checkbox-grid" id="order-items" role="group" aria-label="Select products">
+              <!-- Checkboxes rendered by main.js -->
+            </div>
+            <div class="form-group form-group--nested">
+              <label for="custom-items">Additional / custom items</label>
+              <textarea id="custom-items" name="customItems" rows="3" placeholder="e.g. Red velvet cake with 'Best Dad' message, gluten-free options..."></textarea>
+            </div>
+            <span class="form-error" id="error-items" role="alert"></span>
+          </fieldset>
+
+          <div class="form-group">
+            <label for="customer-address">Your address <span class="required">*</span></label>
+            <textarea id="customer-address" name="address" rows="3" required placeholder="Street address, city, zip code"></textarea>
+            <span class="form-error" id="error-address" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="payment-method">Payment method <span class="required">*</span></label>
+            <select id="payment-method" name="paymentMethod" required>
+              <option value="">Select payment method</option>
+              <!-- Options rendered by main.js -->
+            </select>
+            <span class="form-error" id="error-payment" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="special-requirements">Specific requirements</label>
+            <textarea id="special-requirements" name="specialRequirements" rows="3" placeholder="Allergies, preferred delivery time, gift message, dietary needs..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-submit" id="submit-btn">
+              <span class="btn-text">Submit Order</span>
+              <span class="btn-loader" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <div class="form-message form-message--success" id="form-success" role="status" hidden>
+            <span class="form-message-icon" aria-hidden="true">&#10003;</span>
+            <div>
+              <strong>Order received!</strong>
+              <p>Thank you! We'll be in touch soon to confirm your Father's Day delivery.</p>
+            </div>
+          </div>
+
+          <div class="form-message form-message--error" id="form-error" role="alert" hidden>
+            <span class="form-message-icon" aria-hidden="true">!</span>
+            <div>
+              <strong>Something went wrong</strong>
+              <p id="form-error-text">Please try again or contact us directly.</p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-brand" id="footer-brand">Chirag's Bakery</p>
+      <p class="footer-note" id="footer-note">Father's Day orders — door-to-door delivery available</p>
+      <p class="footer-copy">&copy; <span id="year"></span> Chirag's Bakery. Made with love for Father's Day.</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/form.js"></script>
+</body>
+</html>

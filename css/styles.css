@@ -359,12 +359,17 @@ textarea {
 }
 
 .product-visual {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 140px;
-  font-size: 3.5rem;
-  background: linear-gradient(135deg, var(--color-cream-dark), rgba(201, 162, 39, 0.12));
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--color-cream-dark);
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .product-body {
@@ -421,8 +426,12 @@ textarea {
   color: var(--color-white);
 }
 
-.product-visual {
-  position: relative;
+.cart-row-image {
+  width: 2.75rem;
+  height: 2.75rem;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
 }
 
 .product-qty-badge {
@@ -1144,13 +1153,8 @@ body.has-cart-bar {
   }
 
   .product-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.75rem;
-  }
-
-  .product-visual {
-    height: 160px;
-    font-size: 4rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
   }
 
   .hero-content {

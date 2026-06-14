@@ -77,6 +77,20 @@
     navCart.textContent = itemCount > 0 ? `Cart (${itemCount})` : "Cart";
   }
 
+  function productVisualHtml(product) {
+    if (product.image) {
+      return `<img class="product-image" src="${product.image}" alt="${product.name}" loading="lazy">`;
+    }
+    return product.emoji || "";
+  }
+
+  function cartItemVisualHtml(product) {
+    if (product.image) {
+      return `<img class="cart-row-image" src="${product.image}" alt="" loading="lazy">`;
+    }
+    return `<span class="cart-row-emoji" aria-hidden="true">${product.emoji || ""}</span>`;
+  }
+
   function renderCart() {
     const cartEl = document.getElementById("order-cart");
     if (!cartEl) return;
@@ -99,7 +113,7 @@
         ({ product, quantity }) => `
       <div class="cart-row" data-cart-id="${product.id}">
         <div class="cart-row-info">
-          <span class="cart-row-emoji" aria-hidden="true">${product.emoji}</span>
+          ${cartItemVisualHtml(product)}
           <div class="cart-row-text">
             <span class="cart-row-name">${product.name}</span>
             <span class="cart-row-unit">${formatPrice(product.price)} each</span>
@@ -156,7 +170,7 @@
       .map(
         (product) => `
       <article class="product-card reveal" role="listitem" data-product-id="${product.id}">
-        <div class="product-visual" aria-hidden="true">${product.emoji}</div>
+        <div class="product-visual">${productVisualHtml(product)}</div>
         <div class="product-body">
           <h3 class="product-name">${product.name}</h3>
           <p class="product-description">${product.description}</p>

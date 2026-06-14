@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   "use strict";
 
   const form = document.getElementById("order-form");
@@ -26,6 +26,27 @@
     payment: document.getElementById("error-payment"),
   };
 
+  const paymentInfoEl = document.getElementById("payment-info");
+
+  function updatePaymentInfo() {
+    if (!paymentInfoEl || !fields.paymentMethod) return;
+
+    const method = fields.paymentMethod.value;
+    const details = SITE_CONFIG.paymentDetails?.[method];
+
+    if (!details) {
+      paymentInfoEl.hidden = true;
+      paymentInfoEl.innerHTML = "";
+      return;
+    }
+
+    paymentInfoEl.hidden = false;
+    paymentInfoEl.innerHTML = `
+      <p class="payment-info-label">${details.label}</p>
+      <p class="payment-info-value">${details.value}</p>
+    `;
+  }
+
   function clearErrors() {
     Object.values(errors).forEach((el) => {
       if (el) el.textContent = "";
@@ -50,28 +71,12 @@
       fieldMap[key].closest(".form-group")?.classList.add("form-group--invalid");
     }
     if (key === "items") {
-      document.querySelector(".form-fieldset")?.classList.add("form-fieldset--invalid");
+      document.getElementById("cart-section")?.classList.add("form-fieldset--invalid");
     }
-  }
-
-  function getSelectedItems() {
-    const checkboxes = form.querySelectorAll('input[name="items"]:checked');
-    return Array.from(checkboxes).map((cb) => cb.dataset.label || cb.value);
   }
 
   function buildItemsOrdered() {
-    const selected = getSelectedItems();
-    const custom = fields.customItems?.value.trim() || "";
-    const parts = [];
-
-    if (selected.length) {
-      parts.push(selected.join("; "));
-    }
-    if (custom) {
-      parts.push("Custom: " + custom);
-    }
-
-    return parts.join(" | ");
+    return Cart.buildItemsOrdered(fields.customItems?.value || "");
   }
 
   function validate() {
@@ -98,7 +103,7 @@
     }
 
     if (!itemsOrdered) {
-      setError("items", "Please select at least one item or describe a custom order.");
+      setError("items", "Please add at least one item from the menu or describe a custom order.");
       valid = false;
     }
 
@@ -156,20 +161,40 @@
       );
     }
 
-    const response = await fetch(url, {
-      method: "POST",
-      mode: "cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(data),
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-    const result = await response.json();
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        mode: "cors",
+        // text/plain avoids a CORS preflight; Google Apps Script does not handle OPTIONS.
+        // Body is still JSON — parsed in Code.gs via parseOrderPayload.
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      });
 
-    if (!response.ok || !result.success) {
-      throw new Error(result.message || "Failed to submit order.");
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.message || "Failed to submit order.");
+      }
+
+      return result;
+    } catch (err) {
+      if (err.name === "AbortError") {
+        throw new Error("Request timed out. Please try again.");
+      }
+      if (err.message === "Failed to fetch") {
+        throw new Error(
+          "Could not reach the order server. Check your connection and try again."
+        );
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeoutId);
     }
-
-    return result;
   }
 
   form.addEventListener("submit", async (e) => {
@@ -184,6 +209,8 @@
     try {
       await submitToGoogleSheets(data);
       form.reset();
+      Cart.clear();
+      updatePaymentInfo();
       showSuccess();
     } catch (err) {
       showError(err.message || "Please try again or contact us directly.");
@@ -192,9 +219,12 @@
     }
   });
 
+  fields.paymentMethod?.addEventListener("change", updatePaymentInfo);
+  updatePaymentInfo();
+
   form.querySelectorAll("input, textarea, select").forEach((el) => {
     el.addEventListener("input", () => {
-      el.closest(".form-group, .form-fieldset")?.classList.remove(
+      el.closest(".form-group, .form-fieldset, #cart-section")?.classList.remove(
         "form-group--invalid",
         "form-fieldset--invalid"
       );

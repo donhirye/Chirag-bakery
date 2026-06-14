@@ -8,21 +8,31 @@ const SITE_CONFIG = {
   footerNote: "Father's Day orders — door-to-door delivery available",
 
   // Paste your Google Apps Script Web App URL here after setup (see SETUP.md)
-  googleScriptUrl: "",
+  googleScriptUrl:
+    "https://script.google.com/macros/s/AKfycbzme_R8azNqOjzvTOwSpJCGc6pyNEEMjPw9Koh-64jLth8816rP7ZMo3qHAqOCvXC-1/exec",
 
   paymentMethods: [
     "Cash on delivery",
     "Venmo",
     "Zelle",
-    "PayPal",
-    "Other",
   ],
+
+  paymentDetails: {
+    Venmo: {
+      label: "Send payment to this Venmo address:",
+      value: "venmoaddress@gmail.com",
+    },
+    Zelle: {
+      label: "Send payment to this Zelle address:",
+      value: "zelleaddress@gmail.com",
+    },
+  },
 
   products: [
     {
       id: "chocolate-cake",
-      name: "Father's Day Chocolate Cake",
-      description: "Rich double-layer chocolate cake with ganache frosting",
+      name: "A",
+      description: "description a.",
       price: 35,
       emoji: "🎂",
     },
@@ -35,8 +45,8 @@ const SITE_CONFIG = {
     },
     {
       id: "pastry-box",
-      name: "Assorted Pastry Box",
-      description: "A curated selection of our finest pastries",
+      name: "B",
+      description: "description B.",
       price: 28,
       emoji: "🥐",
     },

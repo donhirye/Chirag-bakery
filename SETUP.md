@@ -93,6 +93,27 @@ Netlify redeploys automatically in ~30 seconds. Check **Netlify → Deploys** to
 
 ---
 
+## 6. Custom domain (chefchirag.com)
+
+**Cost:** ~$10–15/year for the domain; **$0 on Netlify** (Free plan includes custom domains + SSL).
+
+As of June 2026, **chefchirag.com is available** to register. Full details, registrar pricing, and DNS steps are in [`docs/CUSTOM-DOMAIN.md`](docs/CUSTOM-DOMAIN.md).
+
+### Quick steps
+
+1. **Buy** `chefchirag.com` at [Namecheap](https://www.namecheap.com/domains/registration/results/?domain=chefchirag.com) or [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) (~$7–11 first year).
+2. **Netlify:** Site → **Domain management** → **Add a domain** → enter `chefchirag.com` (and `www.chefchirag.com` if desired).
+3. **DNS:** Either point A/CNAME records to Netlify (keep registrar DNS) or switch nameservers to Netlify DNS — see [`docs/CUSTOM-DOMAIN.md`](docs/CUSTOM-DOMAIN.md) for exact records.
+4. **Verify:** After DNS propagates (minutes to a few hours), run:
+
+```powershell
+.\scripts\verify-domain.ps1
+```
+
+Netlify issues a free HTTPS certificate automatically once DNS is correct.
+
+---
+
 ## Troubleshooting
 
 | Problem | Solution |
@@ -101,6 +122,8 @@ Netlify redeploys automatically in ~30 seconds. Check **Netlify → Deploys** to
 | Order not appearing in sheet | Re-deploy the Apps Script (Deploy → Manage deployments → Edit → New version → Deploy) |
 | CORS or network error | Make sure Web app access is set to **Anyone**, not "Anyone with Google account" |
 | Changed the script code | You must create a **new deployment version** each time you edit `Code.gs` |
+| Custom domain not working | Run `.\scripts\verify-domain.ps1` and follow [`docs/CUSTOM-DOMAIN.md`](docs/CUSTOM-DOMAIN.md) |
+| HTTPS certificate pending | Wait for DNS propagation; confirm A/CNAME records in Netlify Domain management |
 
 ---
 

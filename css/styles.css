@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    Chirag's Bakery — Father's Day Theme
    Mobile-first responsive styles
    ============================================ */
@@ -44,6 +44,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + 1.25rem);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -420,6 +421,27 @@ textarea {
   color: var(--color-white);
 }
 
+.product-visual {
+  position: relative;
+}
+
+.product-qty-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding: 0 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background: var(--color-burgundy);
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
 /* ---- Order Form ---- */
 
 .order {
@@ -518,6 +540,346 @@ textarea {
   font-size: 0.8rem;
   color: var(--color-error);
   min-height: 1.2em;
+}
+/* Cart */
+
+.cart-heading {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-walnut);
+  margin-bottom: 0.35rem;
+}
+
+.cart {
+  margin-bottom: 0.75rem;
+}
+
+.cart-empty {
+  padding: 1.25rem;
+  text-align: center;
+  background: var(--color-cream);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.cart-empty p {
+  margin-bottom: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.cart-empty-link {
+  font-weight: 600;
+  color: var(--color-burgundy);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.cart-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--color-cream);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.cart-row-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 140px;
+}
+
+.cart-row-emoji {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.cart-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.cart-row-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.cart-row-unit {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.cart-row-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--color-white);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.qty-btn {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-burgundy);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.qty-btn:hover {
+  background: rgba(139, 41, 66, 0.08);
+}
+
+.qty-value {
+  min-width: 2rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.cart-row-total {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-burgundy);
+  min-width: 3rem;
+  text-align: right;
+}
+
+.cart-remove-btn {
+  min-height: 36px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cart-remove-btn:hover {
+  color: var(--color-error);
+}
+
+.cart-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--color-border);
+}
+
+.cart-total-label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.cart-total-value {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-burgundy);
+}
+
+.cart-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.cart-actions[hidden] {
+  display: none !important;
+}
+
+.cart-action-btn {
+  flex: 1;
+  min-height: 44px;
+  text-align: center;
+  font-weight: 600;
+}
+
+#cart-add-more.cart-action-btn {
+  background: var(--color-cream);
+  color: var(--color-burgundy);
+  border: 2px solid var(--color-burgundy);
+}
+
+#cart-add-more.cart-action-btn:hover {
+  background: var(--color-cream-dark);
+  border-color: var(--color-burgundy-dark);
+  color: var(--color-burgundy-dark);
+}
+
+#menu,
+#cart-section,
+#checkout-details {
+  scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+
+.checkout-details-heading {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-walnut);
+  margin-top: 1.75rem;
+  margin-bottom: 1rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--color-border);
+}
+
+.checkout-details-fields {
+  margin-top: 0;
+}
+
+.checkout-details--highlight {
+  animation: highlight-pulse 1.2s ease;
+  border-radius: var(--radius-sm);
+}
+
+.payment-info {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: rgba(139, 41, 66, 0.06);
+  border: 1px solid rgba(139, 41, 66, 0.2);
+  border-radius: var(--radius-sm);
+}
+
+.payment-info[hidden] {
+  display: none !important;
+}
+
+.payment-info-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.payment-info-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-burgundy);
+  word-break: break-all;
+}
+
+.cart-section--highlight {
+  animation: highlight-pulse 1.2s ease;
+}
+
+.form-fieldset--invalid .cart {
+  outline: 2px solid var(--color-error);
+  border-radius: var(--radius-sm);
+}
+
+/* Sticky cart bar */
+
+.cart-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -6px 24px rgba(45, 35, 32, 0.1);
+  padding: 0.85rem 0;
+  padding-bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
+  transform: translateY(0);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.cart-bar[hidden] {
+  display: none !important;
+}
+
+.cart-bar--at-checkout {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.has-cart-bar {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.cart-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cart-bar-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.cart-bar-count {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cart-bar-total {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-burgundy);
+  line-height: 1.1;
+}
+
+.cart-bar-cta {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0.65rem 1.35rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 400px) {
+  .cart-bar-cta {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .cart-bar-total {
+    font-size: 1.2rem;
+  }
 }
 
 /* Checkbox cards */

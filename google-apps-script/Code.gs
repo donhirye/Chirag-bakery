@@ -5,10 +5,47 @@
  * attached to your Google Sheet. See SETUP.md for full instructions.
  */
 
+function parseOrderPayload(e) {
+  e = e || {};
+
+  if (e.parameter) {
+    const hasOrderFields =
+      e.parameter.name || e.parameter.phone || e.parameter.itemsOrdered;
+    if (hasOrderFields) {
+      return e.parameter;
+    }
+  }
+
+  if (e.postData && e.postData.contents) {
+    const contents = e.postData.contents;
+    const contentType = (e.postData.type || "").toLowerCase();
+
+    if (contentType.indexOf("application/json") !== -1 || contents.trim().charAt(0) === "{") {
+      return JSON.parse(contents);
+    }
+
+    const params = {};
+    contents.split("&").forEach(function (pair) {
+      const parts = pair.split("=");
+      const key = decodeURIComponent(parts[0] || "");
+      const value = decodeURIComponent((parts[1] || "").replace(/\+/g, " "));
+      if (key) params[key] = value;
+    });
+
+    if (params.name || params.phone || params.itemsOrdered) {
+      return params;
+    }
+  }
+
+  return {};
+}
+
 function doPost(e) {
   try {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const data = JSON.parse(e.postData.contents);
+    const data = parseOrderPayload(e);
+
+    Logger.log("Order payload: " + JSON.stringify(data));
 
     const row = [
       new Date(),
@@ -60,4 +97,21 @@ function setupSheet() {
     .setFontColor("#FFFFFF");
   sheet.setFrozenRows(1);
   sheet.autoResizeColumns(1, headers.length);
+}
+
+/**
+ * Run this once from the Apps Script editor to verify rows can be written.
+ * Select testOrderWrite from the dropdown, then click Run.
+ */
+function testOrderWrite() {
+  doPost({
+    parameter: {
+      name: "Sheet Test",
+      phone: "5551234567",
+      itemsOrdered: "Test cake x1 ($35)",
+      address: "123 Test Street",
+      paymentMethod: "Venmo",
+      specialRequirements: "If you see this row, the sheet connection works.",
+    },
+  });
 }

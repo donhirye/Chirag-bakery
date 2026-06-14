@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=9">
 </head>
 <body>
   <header class="site-header">
@@ -18,8 +18,8 @@
         <span class="logo-text" id="brand-name">Chirag's Bakery</span>
       </a>
       <nav class="nav" aria-label="Main navigation">
-        <a href="#products" class="nav-link">Menu</a>
-        <a href="#order" class="nav-link nav-link--cta">Order Now</a>
+        <a href="#menu" class="nav-link">Menu</a>
+        <a href="#cart-section" class="nav-link nav-link--cta" id="nav-cart">Cart</a>
       </nav>
     </div>
   </header>
@@ -37,10 +37,10 @@
           Celebrate Father's Day with freshly baked cakes, buttery cookies, and artisan pastries made with love.
         </p>
         <div class="hero-actions">
-          <a href="#order" class="btn btn-primary">Place an Order</a>
-          <a href="#products" class="btn btn-secondary">View Menu</a>
+          <a href="#cart-section" class="btn btn-primary">Cart</a>
+          <a href="#menu" class="btn btn-secondary">View Menu</a>
         </div>
-        <a href="#products" class="scroll-cue" aria-label="Scroll to menu">
+        <a href="#menu" class="scroll-cue" aria-label="Scroll to menu">
           <span class="scroll-cue-text">Explore our menu</span>
           <span class="scroll-cue-arrow" aria-hidden="true">&#8595;</span>
         </a>
@@ -49,10 +49,10 @@
 
     <section class="products section" id="products">
       <div class="container">
-        <header class="section-header reveal">
+        <header class="section-header reveal" id="menu">
           <span class="section-label">Our Menu</span>
           <h2 class="section-title">Baked with care, made for Dad</h2>
-          <p class="section-subtitle">Select your favorites below — or describe a custom order in the form.</p>
+          <p class="section-subtitle">Add items below — your cart updates as you go.</p>
         </header>
         <div class="product-grid" id="product-grid" role="list">
           <!-- Products rendered by main.js -->
@@ -63,13 +63,31 @@
     <section class="order section" id="order">
       <div class="container">
         <header class="section-header reveal">
-          <span class="section-label">Order Form</span>
+          <span class="section-label">Checkout</span>
           <h2 class="section-title">Door-to-door delivery</h2>
-          <p class="section-subtitle">Fill out the form below and we'll bring your treats straight to you.</p>
+          <p class="section-subtitle">Review your cart, then enter your delivery details below.</p>
         </header>
 
         <form class="order-form reveal" id="order-form" novalidate>
-          <div class="form-row">
+          <div class="form-group form-fieldset" id="cart-section">
+            <h3 class="cart-heading">Your order</h3>
+            <p class="form-hint">Review your items. Keep shopping to add more, or Checkout to enter delivery details.</p>
+            <div class="cart" id="order-cart" aria-live="polite">
+              <!-- Cart rendered by main.js -->
+            </div>
+            <div class="cart-actions" id="cart-actions" hidden>
+              <a href="#menu" id="cart-add-more" class="btn btn-secondary cart-action-btn">Keep shopping</a>
+              <button type="button" id="cart-checkout" class="btn btn-primary cart-action-btn">Checkout</button>
+            </div>
+            <div class="form-group form-group--nested">
+              <label for="custom-items">Additional / custom items</label>
+              <textarea id="custom-items" name="customItems" rows="3" placeholder="e.g. Red velvet cake with 'Best Dad' message, gluten-free options..."></textarea>
+            </div>
+            <span class="form-error" id="error-items" role="alert"></span>
+          </div>
+
+          <h3 class="checkout-details-heading" id="checkout-details">Delivery details</h3>
+          <div class="form-row checkout-details-fields">
             <div class="form-group">
               <label for="customer-name">Your name <span class="required">*</span></label>
               <input type="text" id="customer-name" name="name" autocomplete="name" required placeholder="Full name">
@@ -81,19 +99,6 @@
               <span class="form-error" id="error-phone" role="alert"></span>
             </div>
           </div>
-
-          <fieldset class="form-group form-fieldset">
-            <legend>What do you want to buy? <span class="required">*</span></legend>
-            <p class="form-hint">Select items from our menu and/or describe custom requests below.</p>
-            <div class="checkbox-grid" id="order-items" role="group" aria-label="Select products">
-              <!-- Checkboxes rendered by main.js -->
-            </div>
-            <div class="form-group form-group--nested">
-              <label for="custom-items">Additional / custom items</label>
-              <textarea id="custom-items" name="customItems" rows="3" placeholder="e.g. Red velvet cake with 'Best Dad' message, gluten-free options..."></textarea>
-            </div>
-            <span class="form-error" id="error-items" role="alert"></span>
-          </fieldset>
 
           <div class="form-group">
             <label for="customer-address">Your address <span class="required">*</span></label>
@@ -107,6 +112,7 @@
               <option value="">Select payment method</option>
               <!-- Options rendered by main.js -->
             </select>
+            <div class="payment-info" id="payment-info" hidden aria-live="polite"></div>
             <span class="form-error" id="error-payment" role="alert"></span>
           </div>
 
@@ -150,8 +156,19 @@
     </div>
   </footer>
 
-  <script src="js/config.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/form.js"></script>
+  <aside id="cart-bar" class="cart-bar" hidden aria-label="Order summary">
+    <div class="container cart-bar-inner">
+      <div class="cart-bar-summary">
+        <span class="cart-bar-count" id="cart-bar-count">0 items</span>
+        <span class="cart-bar-total" id="cart-bar-total">$0</span>
+      </div>
+      <a href="#cart-section" class="btn btn-primary cart-bar-cta" id="cart-bar-checkout">Checkout</a>
+    </div>
+  </aside>
+
+  <script src="js/config.js?v=9"></script>
+  <script src="js/cart.js?v=9"></script>
+  <script src="js/main.js?v=10"></script>
+  <script src="js/form.js?v=9"></script>
 </body>
 </html>

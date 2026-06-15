@@ -270,10 +270,8 @@
       saturday: "Saturday between 6-8 pm",
       sunday: "Sunday between 8-10 am",
     };
-    const specialRequirements =
-      fulfillmentType === "pickup" && pickupTime
-        ? `Pick up time: ${pickupTimeLabels[pickupTime]}`
-        : "";
+    const pickupTimeLabel =
+      fulfillmentType === "pickup" && pickupTime ? pickupTimeLabels[pickupTime] : "";
 
     return valid
       ? {
@@ -282,8 +280,11 @@
           itemsOrdered,
           address: fulfillmentType === "pickup" ? pickupAddress : address,
           fulfillmentType: fulfillmentType === "pickup" ? "Pick up" : "Delivery",
+          pickupTime: pickupTimeLabel,
           paymentMethod: payment,
-          specialRequirements,
+          zellePaymentMade:
+            payment === "Zelle" && zellePaymentMadeEl?.checked ? "Yes" : "",
+          specialRequirements: "",
         }
       : null;
   }

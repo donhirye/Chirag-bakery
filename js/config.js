@@ -14,11 +14,16 @@ const SITE_CONFIG = {
     "https://script.google.com/macros/s/AKfycbzme_R8azNqOjzvTOwSpJCGc6pyNEEMjPw9Koh-64jLth8816rP7ZMo3qHAqOCvXC-1/exec",
 
   paymentMethods: [
-    "Cash on delivery",
+    "Cash/Card on delivery",
+    "Venmo",
     "Zelle",
   ],
 
   paymentDetails: {
+    Venmo: {
+      label: "Send payment to this Venmo address:",
+      value: "@amodak",
+    },
     Zelle: {
       label: "Send payment to this Zelle address:",
       value: "modak.anagha@gmail.com",

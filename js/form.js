@@ -14,8 +14,15 @@
     phone: document.getElementById("customer-phone"),
     address: document.getElementById("customer-address"),
     paymentMethod: document.getElementById("payment-method"),
-    deliveryNote: document.getElementById("delivery-note"),
+    fulfillmentPickup: document.getElementById("fulfillment-pickup"),
+    fulfillmentDelivery: document.getElementById("fulfillment-delivery"),
   };
+
+  const fulfillmentNoticeGroup = document.getElementById("fulfillment-notice-group");
+  const fulfillmentNoticePickup = document.getElementById("fulfillment-notice-pickup");
+  const fulfillmentNoticeDelivery = document.getElementById("fulfillment-notice-delivery");
+  const addressGroup = document.getElementById("address-group");
+  const fulfillmentFieldset = document.getElementById("fulfillment-fieldset");
 
   const errors = {
     name: document.getElementById("error-name"),
@@ -23,9 +30,71 @@
     items: document.getElementById("error-items"),
     address: document.getElementById("error-address"),
     payment: document.getElementById("error-payment"),
+    fulfillment: document.getElementById("error-fulfillment"),
+    pickupTime: document.getElementById("error-pickup-time"),
   };
 
   const paymentInfoEl = document.getElementById("payment-info");
+
+  function getFulfillmentType() {
+    if (fields.fulfillmentPickup?.checked) return "pickup";
+    if (fields.fulfillmentDelivery?.checked) return "delivery";
+    return "";
+  }
+
+  function getPickupTime() {
+    const selected = form.querySelector('input[name="pickupTime"]:checked');
+    return selected?.value || "";
+  }
+
+  function clearPickupTime() {
+    form.querySelectorAll('input[name="pickupTime"]').forEach((el) => {
+      el.checked = false;
+      el.required = false;
+    });
+    if (errors.pickupTime) errors.pickupTime.textContent = "";
+    document.getElementById("pickup-time-options")?.classList.remove("pickup-time-options--invalid");
+  }
+
+  function setPickupTimeRequired(isRequired) {
+    const radios = form.querySelectorAll('input[name="pickupTime"]');
+    radios.forEach((el, index) => {
+      el.required = isRequired && index === 0;
+    });
+  }
+
+  function updateFulfillmentUI() {
+    const type = getFulfillmentType();
+
+    if (fulfillmentNoticeGroup) {
+      fulfillmentNoticeGroup.hidden = !type;
+    }
+
+    if (fulfillmentNoticePickup) {
+      fulfillmentNoticePickup.hidden = type !== "pickup";
+    }
+
+    if (fulfillmentNoticeDelivery) {
+      fulfillmentNoticeDelivery.hidden = type !== "delivery";
+    }
+
+    if (addressGroup) {
+      addressGroup.hidden = type !== "delivery";
+    }
+
+    if (fields.address) {
+      fields.address.required = type === "delivery";
+      if (type !== "delivery") {
+        fields.address.value = "";
+      }
+    }
+
+    if (type !== "pickup") {
+      clearPickupTime();
+    } else {
+      setPickupTimeRequired(true);
+    }
+  }
 
   function updatePaymentInfo() {
     if (!paymentInfoEl || !fields.paymentMethod) return;
@@ -53,6 +122,9 @@
     form.querySelectorAll(".form-group--invalid, .form-fieldset--invalid").forEach((el) => {
       el.classList.remove("form-group--invalid", "form-fieldset--invalid");
     });
+    form.querySelectorAll(".pickup-time-options--invalid").forEach((el) => {
+      el.classList.remove("pickup-time-options--invalid");
+    });
   }
 
   function setError(key, message) {
@@ -69,9 +141,23 @@
     if (fieldMap[key]) {
       fieldMap[key].closest(".form-group")?.classList.add("form-group--invalid");
     }
+    if (key === "fulfillment") {
+      fulfillmentFieldset?.closest(".form-group")?.classList.add("form-group--invalid");
+    }
+    if (key === "pickupTime") {
+      document.getElementById("pickup-time-options")?.classList.add("pickup-time-options--invalid");
+      fulfillmentNoticeGroup?.closest(".form-group")?.classList.add("form-group--invalid");
+    }
     if (key === "items") {
       document.getElementById("cart-section")?.classList.add("form-fieldset--invalid");
     }
+  }
+
+  function focusFirstError() {
+    const firstError = form.querySelector(
+      ".form-group--invalid, .pickup-time-options--invalid, .form-fieldset--invalid, #cart-section.form-fieldset--invalid"
+    );
+    firstError?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function buildItemsOrdered() {
@@ -86,6 +172,8 @@
     const phone = fields.phone?.value.trim() || "";
     const address = fields.address?.value.trim() || "";
     const payment = fields.paymentMethod?.value || "";
+    const fulfillmentType = getFulfillmentType();
+    const pickupTime = getPickupTime();
     const itemsOrdered = buildItemsOrdered();
 
     if (!name) {
@@ -96,8 +184,8 @@
     if (!phone) {
       setError("phone", "Please enter your phone number.");
       valid = false;
-    } else if (phone.replace(/\D/g, "").length < 7) {
-      setError("phone", "Please enter a valid phone number.");
+    } else if (phone.replace(/\D/g, "").length !== 10) {
+      setError("phone", "Please enter a valid 10-digit phone number.");
       valid = false;
     }
 
@@ -106,8 +194,18 @@
       valid = false;
     }
 
-    if (!address) {
+    if (!fulfillmentType) {
+      setError("fulfillment", "Please choose pick up or delivery.");
+      valid = false;
+    }
+
+    if (fulfillmentType === "delivery" && !address) {
       setError("address", "Please enter your delivery address.");
+      valid = false;
+    }
+
+    if (fulfillmentType === "pickup" && !pickupTime) {
+      setError("pickupTime", "Please choose a pick up time.");
       valid = false;
     }
 
@@ -116,14 +214,25 @@
       valid = false;
     }
 
+    const pickupAddress = "2427 Haider Avenue Naperville";
+    const pickupTimeLabels = {
+      saturday: "Saturday between 4-6",
+      sunday: "Sunday between 8-10 am",
+    };
+    const specialRequirements =
+      fulfillmentType === "pickup" && pickupTime
+        ? `Pick up time: ${pickupTimeLabels[pickupTime]}`
+        : "";
+
     return valid
       ? {
           name,
           phone,
           itemsOrdered,
-          address,
+          address: fulfillmentType === "pickup" ? pickupAddress : address,
+          fulfillmentType: fulfillmentType === "pickup" ? "Pick up" : "Delivery",
           paymentMethod: payment,
-          specialRequirements: fields.deliveryNote?.value.trim() || "",
+          specialRequirements,
         }
       : null;
   }
@@ -201,7 +310,10 @@
     hideMessages();
 
     const data = validate();
-    if (!data) return;
+    if (!data) {
+      focusFirstError();
+      return;
+    }
 
     setLoading(true);
 
@@ -210,6 +322,7 @@
       form.reset();
       Cart.clear();
       updatePaymentInfo();
+      updateFulfillmentUI();
       showSuccess();
     } catch (err) {
       showError(err.message || "Please try again or contact us directly.");
@@ -220,6 +333,24 @@
 
   fields.paymentMethod?.addEventListener("change", updatePaymentInfo);
   updatePaymentInfo();
+
+  document.querySelectorAll('input[name="fulfillmentType"]').forEach((el) => {
+    el.addEventListener("change", () => {
+      updateFulfillmentUI();
+      fulfillmentFieldset?.closest(".form-group")?.classList.remove("form-group--invalid");
+      if (errors.fulfillment) errors.fulfillment.textContent = "";
+    });
+  });
+
+  document.querySelectorAll('input[name="pickupTime"]').forEach((el) => {
+    el.addEventListener("change", () => {
+      document.getElementById("pickup-time-options")?.classList.remove("pickup-time-options--invalid");
+      fulfillmentNoticeGroup?.closest(".form-group")?.classList.remove("form-group--invalid");
+      if (errors.pickupTime) errors.pickupTime.textContent = "";
+    });
+  });
+
+  updateFulfillmentUI();
 
   form.querySelectorAll("input, textarea, select").forEach((el) => {
     el.addEventListener("input", () => {

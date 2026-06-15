@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=36">
+  <link rel="stylesheet" href="css/styles.css?v=41">
 </head>
 <body>
   <header class="site-header">
@@ -94,8 +94,49 @@
           </div>
 
           <div class="form-group">
+            <div class="fulfillment-fieldset" id="fulfillment-fieldset">
+              <div class="fulfillment-options">
+                <label class="fulfillment-option">
+                  <input type="radio" name="fulfillmentType" value="pickup" id="fulfillment-pickup">
+                  <span class="fulfillment-option-label">Pick up</span>
+                </label>
+                <label class="fulfillment-option">
+                  <input type="radio" name="fulfillmentType" value="delivery" id="fulfillment-delivery">
+                  <span class="fulfillment-option-label">Delivery</span>
+                </label>
+              </div>
+            </div>
+            <span class="form-error" id="error-fulfillment" role="alert"></span>
+          </div>
+
+          <div class="form-group" id="fulfillment-notice-group" hidden>
+            <div id="fulfillment-notice-pickup" hidden>
+              <p class="delivery-notice delivery-notice--address">
+                Pick up address — 2427 Haider Avenue Naperville
+              </p>
+              <p class="pickup-time-label">Pick up time <span class="required">*</span></p>
+              <div class="fulfillment-options pickup-time-options" id="pickup-time-options">
+                <label class="fulfillment-option">
+                  <input type="radio" name="pickupTime" value="saturday" id="pickup-time-saturday">
+                  <span class="fulfillment-option-label">Saturday between 4-6</span>
+                </label>
+                <label class="fulfillment-option">
+                  <input type="radio" name="pickupTime" value="sunday" id="pickup-time-sunday">
+                  <span class="fulfillment-option-label">Sunday between 8-10 am</span>
+                </label>
+              </div>
+              <span class="form-error" id="error-pickup-time" role="alert"></span>
+            </div>
+            <div id="fulfillment-notice-delivery" hidden>
+              <p class="delivery-notice delivery-notice--highlight">
+                Order will be delivered Sunday June 21st between 9-11.
+              </p>
+            </div>
+          </div>
+
+          <div class="form-group" id="address-group" hidden>
             <label for="customer-address">Your address <span class="required">*</span></label>
-            <textarea id="customer-address" name="address" rows="3" required placeholder="Street address, city, zip code"></textarea>
+            <textarea id="customer-address" name="address" rows="3" placeholder="Street address, city, zip code"></textarea>
             <span class="form-error" id="error-address" role="alert"></span>
           </div>
 
@@ -107,19 +148,6 @@
             </select>
             <div class="payment-info" id="payment-info" hidden aria-live="polite"></div>
             <span class="form-error" id="error-payment" role="alert"></span>
-          </div>
-
-          <div class="form-group">
-            <p class="delivery-notice">
-              Order will be delivered on Sunday June 21st between 9-12. If needed on Saturday please send a message below with preferred time.
-            </p>
-            <label for="delivery-note" class="visually-hidden">Saturday delivery request</label>
-            <textarea
-              id="delivery-note"
-              name="specialRequirements"
-              rows="2"
-              placeholder="Saturday delivery time request (optional)"
-            ></textarea>
           </div>
 
           <div class="form-actions">

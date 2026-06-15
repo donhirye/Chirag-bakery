@@ -1327,6 +1327,88 @@ textarea {
   margin-bottom: 0.65rem;
 }
 
+.delivery-notice--address {
+  font-weight: 600;
+  color: #c62828;
+  margin-bottom: 0;
+}
+
+.delivery-notice--highlight {
+  font-weight: 700;
+  color: #c62828;
+  margin-bottom: 0;
+}
+
+.fulfillment-fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+.fulfillment-fieldset legend {
+  display: none;
+}
+
+.fulfillment-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.fulfillment-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.65rem 1rem;
+  background: var(--color-cream);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  flex: 1 1 8rem;
+}
+
+.fulfillment-option:has(input:checked) {
+  border-color: var(--color-burgundy);
+  background: rgba(139, 41, 66, 0.06);
+  box-shadow: 0 0 0 3px rgba(139, 41, 66, 0.12);
+}
+
+.fulfillment-option input {
+  width: 1rem;
+  height: 1rem;
+  min-height: auto;
+  margin: 0;
+  accent-color: var(--color-burgundy);
+}
+
+.fulfillment-option-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-walnut);
+}
+
+.form-group--invalid .fulfillment-options {
+  outline: 2px solid var(--color-error);
+  border-radius: var(--radius-sm);
+}
+
+.pickup-time-options.pickup-time-options--invalid {
+  outline: 2px solid var(--color-error);
+  border-radius: var(--radius-sm);
+}
+
+.pickup-time-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-walnut);
+  margin: 1rem 0 0.5rem;
+}
+
+.pickup-time-options {
+  margin-bottom: 0.25rem;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

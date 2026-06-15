@@ -53,6 +53,7 @@ function doPost(e) {
       data.phone || "",
       data.itemsOrdered || "",
       data.address || "",
+      data.fulfillmentType || "",
       data.paymentMethod || "",
       data.specialRequirements || "",
     ];
@@ -86,6 +87,7 @@ function setupSheet() {
     "Phone",
     "Items Ordered",
     "Address",
+    "Fulfillment",
     "Payment Method",
     "Special Requirements",
   ];
@@ -110,6 +112,7 @@ function testOrderWrite() {
       phone: "5551234567",
       itemsOrdered: "Test cake x1 ($35)",
       address: "123 Test Street",
+      fulfillmentType: "delivery",
       paymentMethod: "Venmo",
       specialRequirements: "If you see this row, the sheet connection works.",
     },

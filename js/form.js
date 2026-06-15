@@ -32,45 +32,9 @@
     payment: document.getElementById("error-payment"),
     fulfillment: document.getElementById("error-fulfillment"),
     pickupTime: document.getElementById("error-pickup-time"),
-    zellePayment: document.getElementById("error-zelle-payment"),
   };
 
   const paymentInfoEl = document.getElementById("payment-info");
-  const zellePaymentConfirmEl = document.getElementById("zelle-payment-confirm");
-  const zellePaymentMadeEl = document.getElementById("zelle-payment-made");
-
-  function isZelleSelected() {
-    return fields.paymentMethod?.value === "Zelle";
-  }
-
-  function updateZellePaymentConfirm() {
-    const showZelleConfirm = isZelleSelected();
-
-    if (zellePaymentConfirmEl) {
-      zellePaymentConfirmEl.hidden = !showZelleConfirm;
-    }
-
-    if (!showZelleConfirm && zellePaymentMadeEl) {
-      zellePaymentMadeEl.checked = false;
-      zellePaymentMadeEl.required = false;
-    } else if (zellePaymentMadeEl) {
-      zellePaymentMadeEl.required = true;
-    }
-
-    if (errors.zellePayment) {
-      errors.zellePayment.textContent = "";
-    }
-    zellePaymentConfirmEl?.classList.remove("zelle-payment-confirm--invalid");
-
-    updateSubmitAvailability();
-  }
-
-  function updateSubmitAvailability() {
-    if (!submitBtn) return;
-    const blockedByZelle = isZelleSelected() && !zellePaymentMadeEl?.checked;
-    submitBtn.disabled = blockedByZelle;
-    submitBtn.setAttribute("aria-disabled", blockedByZelle ? "true" : "false");
-  }
 
   function updatePaymentInfo() {
     if (!fields.paymentMethod) return;
@@ -90,8 +54,6 @@
     `;
       }
     }
-
-    updateZellePaymentConfirm();
   }
 
   function getFulfillmentType() {
@@ -164,9 +126,6 @@
     form.querySelectorAll(".pickup-time-options--invalid").forEach((el) => {
       el.classList.remove("pickup-time-options--invalid");
     });
-    form.querySelectorAll(".zelle-payment-confirm--invalid").forEach((el) => {
-      el.classList.remove("zelle-payment-confirm--invalid");
-    });
   }
 
   function setError(key, message) {
@@ -193,15 +152,11 @@
     if (key === "items") {
       document.getElementById("cart-section")?.classList.add("form-fieldset--invalid");
     }
-    if (key === "zellePayment") {
-      zellePaymentConfirmEl?.classList.add("zelle-payment-confirm--invalid");
-      fields.paymentMethod?.closest(".form-group")?.classList.add("form-group--invalid");
-    }
   }
 
   function focusFirstError() {
     const firstError = form.querySelector(
-      ".form-group--invalid, .pickup-time-options--invalid, .form-fieldset--invalid, #cart-section.form-fieldset--invalid, .zelle-payment-confirm--invalid"
+      ".form-group--invalid, .pickup-time-options--invalid, .form-fieldset--invalid, #cart-section.form-fieldset--invalid"
     );
     firstError?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
@@ -260,11 +215,6 @@
       valid = false;
     }
 
-    if (payment === "Zelle" && !zellePaymentMadeEl?.checked) {
-      setError("zellePayment", "Please confirm that Zelle payment has been made.");
-      valid = false;
-    }
-
     const pickupAddress = "2427 Haider Avenue Naperville";
     const pickupTimeLabels = {
       saturday: "Saturday between 6-8 pm",
@@ -282,19 +232,13 @@
           fulfillmentType: fulfillmentType === "pickup" ? "Pick up" : "Delivery",
           pickupTime: pickupTimeLabel,
           paymentMethod: payment,
-          zellePaymentMade:
-            payment === "Zelle" && zellePaymentMadeEl?.checked ? "Yes" : "",
           specialRequirements: "",
         }
       : null;
   }
 
   function setLoading(loading) {
-    if (loading) {
-      submitBtn.disabled = true;
-    } else {
-      updateSubmitAvailability();
-    }
+    submitBtn.disabled = loading;
     submitBtn.classList.toggle("btn-submit--loading", loading);
   }
 
@@ -388,11 +332,6 @@
   });
 
   fields.paymentMethod?.addEventListener("change", updatePaymentInfo);
-  zellePaymentMadeEl?.addEventListener("change", () => {
-    zellePaymentConfirmEl?.classList.remove("zelle-payment-confirm--invalid");
-    if (errors.zellePayment) errors.zellePayment.textContent = "";
-    updateSubmitAvailability();
-  });
   updatePaymentInfo();
 
   document.querySelectorAll('input[name="fulfillmentType"]').forEach((el) => {

@@ -4,22 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Order Father's Day cakes, cookies, and bakery treats with door-to-door delivery.">
-  <title>Chirag's Bakery — Father's Day Orders</title>
+  <title>Chef Chirag — Father's Day Orders</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=11">
+  <link rel="stylesheet" href="css/styles.css?v=36">
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <a href="#" class="logo" data-scroll-top>
-        <span class="logo-icon" aria-hidden="true">&#9733;</span>
-        <span class="logo-text" id="brand-name">Chirag's Bakery</span>
+        <span class="logo-row">
+          <span class="logo-text" id="brand-name">Chef Chirag</span>
+        </span>
+        <img
+          src="assets/chirag-avatar.png"
+          alt="Chirag"
+          class="logo-avatar"
+          width="768"
+          height="768"
+        >
       </a>
       <nav class="nav" aria-label="Main navigation">
-        <a href="#menu" class="nav-link">Menu</a>
-        <a href="#cart-section" class="nav-link nav-link--cta" id="nav-cart">Cart</a>
+        <button type="button" class="nav-link nav-link--cta" id="about-open">About me</button>
       </nav>
     </div>
   </header>
@@ -30,30 +37,21 @@
       <div class="container hero-content">
         <span class="hero-badge">Father's Day Special</span>
         <h1 class="hero-title">
-          <span id="hero-headline">Sweet treats for Dad</span>
+          <span id="hero-headline">Gourmet Box</span>
           <em id="hero-subheadline">delivered to your door</em>
         </h1>
         <p class="hero-description" id="hero-description">
-          Celebrate Father's Day with freshly baked cakes, buttery cookies, and artisan pastries made with love.
+          Celebrate Father's Day with freshly baked goods from Chef&nbsp;Chirag!
         </p>
         <div class="hero-actions">
-          <a href="#cart-section" class="btn btn-primary">Cart</a>
-          <a href="#menu" class="btn btn-secondary">View Menu</a>
+          <a href="#menu" class="btn btn-primary">View Menu</a>
+          <a href="#cart-section" class="btn btn-secondary">Cart</a>
         </div>
-        <a href="#menu" class="scroll-cue" aria-label="Scroll to menu">
-          <span class="scroll-cue-text">Explore our menu</span>
-          <span class="scroll-cue-arrow" aria-hidden="true">&#8595;</span>
-        </a>
       </div>
     </section>
 
-    <section class="products section" id="products">
+    <section class="products section" id="menu">
       <div class="container">
-        <header class="section-header reveal" id="menu">
-          <span class="section-label">Our Menu</span>
-          <h2 class="section-title">Baked with care, made for Dad</h2>
-          <p class="section-subtitle">Add items below — your cart updates as you go.</p>
-        </header>
         <div class="product-grid" id="product-grid" role="list">
           <!-- Products rendered by main.js -->
         </div>
@@ -63,8 +61,7 @@
     <section class="order section" id="order">
       <div class="container">
         <header class="section-header reveal">
-          <span class="section-label">Checkout</span>
-          <h2 class="section-title">Door-to-door delivery</h2>
+          <h2 class="section-title">Door-to-Door Delivery</h2>
           <p class="section-subtitle">Review your cart, then enter your delivery details below.</p>
         </header>
 
@@ -78,10 +75,6 @@
             <div class="cart-actions" id="cart-actions" hidden>
               <a href="#menu" id="cart-add-more" class="btn btn-secondary cart-action-btn">Keep shopping</a>
               <button type="button" id="cart-checkout" class="btn btn-primary cart-action-btn">Checkout</button>
-            </div>
-            <div class="form-group form-group--nested">
-              <label for="custom-items">Additional / custom items</label>
-              <textarea id="custom-items" name="customItems" rows="3" placeholder="e.g. Red velvet cake with 'Best Dad' message, gluten-free options..."></textarea>
             </div>
             <span class="form-error" id="error-items" role="alert"></span>
           </div>
@@ -117,8 +110,16 @@
           </div>
 
           <div class="form-group">
-            <label for="special-requirements">Specific requirements</label>
-            <textarea id="special-requirements" name="specialRequirements" rows="3" placeholder="Allergies, preferred delivery time, gift message, dietary needs..."></textarea>
+            <p class="delivery-notice">
+              Order will be delivered on Sunday June 21st between 9-12. If needed on Saturday please send a message below with preferred time.
+            </p>
+            <label for="delivery-note" class="visually-hidden">Saturday delivery request</label>
+            <textarea
+              id="delivery-note"
+              name="specialRequirements"
+              rows="2"
+              placeholder="Saturday delivery time request (optional)"
+            ></textarea>
           </div>
 
           <div class="form-actions">
@@ -150,9 +151,9 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p class="footer-brand" id="footer-brand">Chirag's Bakery</p>
+      <p class="footer-brand" id="footer-brand">Chef Chirag</p>
       <p class="footer-note" id="footer-note">Father's Day orders — door-to-door delivery available</p>
-      <p class="footer-copy">&copy; <span id="year"></span> Chirag's Bakery. Made with love for Father's Day.</p>
+      <p class="footer-copy">&copy; <span id="year"></span> Chef Chirag. Made with love for Father's Day.</p>
     </div>
   </footer>
 
@@ -166,9 +167,68 @@
     </div>
   </aside>
 
+  <div class="about-modal" id="about" hidden role="dialog" aria-modal="true" aria-labelledby="about-title">
+    <div class="about-modal-backdrop" data-about-close tabindex="-1" aria-hidden="true"></div>
+    <div class="about-modal-panel">
+      <button type="button" class="about-close" data-about-close aria-label="Close About me">&times;</button>
+      <div class="about-inner">
+        <img
+          src="assets/chirag-avatar.png"
+          alt="Chirag"
+          class="about-avatar"
+          width="768"
+          height="768"
+        >
+        <div class="about-content">
+          <span class="section-label">About me</span>
+          <h2 class="section-title" id="about-title">Hi, I'm Chirag</h2>
+          <p class="about-text">
+            I discovered my passion for baking and cooking at the age of 8. I love baking for friends and family.
+          </p>
+          <p class="about-text">
+            Every Father's Day box is made fresh with care, delivered right to your door.
+          </p>
+          <a
+            href="https://www.youtube.com/@ChefChiragcooking/shorts"
+            class="about-youtube"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="@chefchiragcooking on YouTube"
+          >
+            <span class="about-youtube-text">@chefchiragcooking</span>
+            <svg class="about-youtube-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8z"/>
+              <path fill="#fff" d="M9.75 15.02l6.27-3.02-6.27-3.02v6.04z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="a-la-carte-modal" id="a-la-carte-modal" hidden role="dialog" aria-modal="true" aria-labelledby="a-la-carte-title">
+    <div class="a-la-carte-modal-backdrop" data-a-la-carte-close tabindex="-1" aria-hidden="true"></div>
+    <div class="a-la-carte-modal-panel">
+      <button type="button" class="a-la-carte-close" data-a-la-carte-close aria-label="Close À la carte menu">&times;</button>
+      <h2 class="a-la-carte-modal-title" id="a-la-carte-title">À la carte</h2>
+      <div class="a-la-carte-grid" id="a-la-carte-grid"></div>
+    </div>
+  </div>
+
+  <div class="image-lightbox" id="image-lightbox" hidden role="dialog" aria-modal="true" aria-label="Enlarged product photo">
+    <div class="image-lightbox-backdrop" data-lightbox-close tabindex="-1" aria-hidden="true"></div>
+    <div class="image-lightbox-panel">
+      <button type="button" class="image-lightbox-close" data-lightbox-close aria-label="Close enlarged photo">&times;</button>
+      <button type="button" class="image-lightbox-arrow image-lightbox-arrow--prev" id="image-lightbox-prev" hidden aria-label="Previous photo">&#8249;</button>
+      <img id="image-lightbox-img" class="image-lightbox-img" src="" alt="">
+      <button type="button" class="image-lightbox-arrow image-lightbox-arrow--next" id="image-lightbox-next" hidden aria-label="Next photo">&#8250;</button>
+      <div class="image-lightbox-dots" id="image-lightbox-dots" hidden></div>
+    </div>
+  </div>
+
   <script src="js/config.js?v=11"></script>
-  <script src="js/cart.js?v=11"></script>
-  <script src="js/main.js?v=11"></script>
+  <script src="js/cart.js?v=12"></script>
+  <script src="js/main.js?v=19"></script>
   <script src="js/form.js?v=9"></script>
 </body>
 </html>

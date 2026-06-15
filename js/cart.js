@@ -5,7 +5,14 @@ const Cart = (function () {
   const listeners = new Set();
 
   function getProduct(id) {
-    return SITE_CONFIG.products.find((p) => p.id === id);
+    for (const product of SITE_CONFIG.products) {
+      if (product.id === id) return product;
+      if (product.items) {
+        const item = product.items.find((entry) => entry.id === id);
+        if (item) return item;
+      }
+    }
+    return undefined;
   }
 
   function notify() {

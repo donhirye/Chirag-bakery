@@ -14,8 +14,7 @@
     phone: document.getElementById("customer-phone"),
     address: document.getElementById("customer-address"),
     paymentMethod: document.getElementById("payment-method"),
-    customItems: document.getElementById("custom-items"),
-    specialRequirements: document.getElementById("special-requirements"),
+    deliveryNote: document.getElementById("delivery-note"),
   };
 
   const errors = {
@@ -76,7 +75,7 @@
   }
 
   function buildItemsOrdered() {
-    return Cart.buildItemsOrdered(fields.customItems?.value || "");
+    return Cart.buildItemsOrdered("");
   }
 
   function validate() {
@@ -124,7 +123,7 @@
           itemsOrdered,
           address,
           paymentMethod: payment,
-          specialRequirements: fields.specialRequirements?.value.trim() || "",
+          specialRequirements: fields.deliveryNote?.value.trim() || "",
         }
       : null;
   }

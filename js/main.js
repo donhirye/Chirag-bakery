@@ -71,22 +71,68 @@
   }
 
   function updateNavCartLabel() {
-    const navCart = document.getElementById("nav-cart");
-    if (!navCart) return;
-    const itemCount = Cart.getItems().reduce((sum, { quantity }) => sum + quantity, 0);
-    navCart.textContent = itemCount > 0 ? `Cart (${itemCount})` : "Cart";
+    // Nav cart removed; kept as no-op for cart update hook.
+  }
+
+  function getProductImages(product) {
+    if (product.images && product.images.length) return product.images;
+    if (product.image) return [product.image];
+    return [];
   }
 
   function productVisualHtml(product) {
-    if (product.image) {
-      return `<img class="product-image" src="${product.image}" alt="${product.name}" loading="lazy">`;
+    const images = getProductImages(product);
+    if (!images.length) return product.emoji || "";
+
+    if (product.items && product.items.length) {
+      return `<button type="button" class="product-image-btn product-image-btn--open-menu" aria-label="View ${product.name} options">
+        <img class="product-image" src="${images[0]}" alt="${product.name}" loading="lazy">
+      </button>`;
     }
-    return product.emoji || "";
+
+    if (images.length === 1) {
+      const set = JSON.stringify(images);
+      return `<button type="button" class="product-image-btn" data-lightbox-set='${set}' data-lightbox-index="0" aria-label="Enlarge ${product.name}">
+        <img class="product-image" src="${images[0]}" alt="${product.name}" loading="lazy">
+      </button>`;
+    }
+
+    const set = JSON.stringify(images);
+    const slides = images
+      .map(
+        (src, i) => `
+      <div class="product-carousel-slide${i === 0 ? " product-carousel-slide--active" : ""}" data-slide="${i}">
+        <button type="button" class="product-image-btn" data-lightbox-set='${set}' data-lightbox-index="${i}" aria-label="Enlarge ${product.name} photo ${i + 1}">
+          <img class="product-image" src="${src}" alt="${product.name} — photo ${i + 1}" loading="lazy">
+        </button>
+      </div>
+    `
+      )
+      .join("");
+
+    const dots = images
+      .map(
+        (_, i) => `
+      <button type="button" class="product-carousel-dot${i === 0 ? " product-carousel-dot--active" : ""}" data-slide-to="${i}" aria-label="Show photo ${i + 1}"></button>
+    `
+      )
+      .join("");
+
+    return `
+      <div class="product-carousel">
+        <div class="product-carousel-slides">${slides}</div>
+        <button type="button" class="product-carousel-arrow product-carousel-arrow--prev" aria-label="Previous photo">&#8249;</button>
+        <button type="button" class="product-carousel-arrow product-carousel-arrow--next" aria-label="Next photo">&#8250;</button>
+        <div class="product-carousel-dots">${dots}</div>
+      </div>
+    `;
   }
 
   function cartItemVisualHtml(product) {
-    if (product.image) {
-      return `<img class="cart-row-image" src="${product.image}" alt="" loading="lazy">`;
+    const images = getProductImages(product);
+    const src = images[0];
+    if (src) {
+      return `<img class="cart-row-image" src="${src}" alt="" loading="lazy">`;
     }
     return `<span class="cart-row-emoji" aria-hidden="true">${product.emoji || ""}</span>`;
   }
@@ -169,16 +215,22 @@
     grid.innerHTML = SITE_CONFIG.products
       .map(
         (product) => `
-      <article class="product-card reveal" role="listitem" data-product-id="${product.id}">
+      <article class="product-card reveal${product.items ? " product-card--menu" : ""}" role="listitem" data-product-id="${product.id}"${product.items ? ' data-a-la-carte-open tabindex="0"' : ""}>
         <div class="product-visual">${productVisualHtml(product)}</div>
         <div class="product-body">
           <h3 class="product-name">${product.name}</h3>
-          <p class="product-description">${product.description}</p>
-          <div class="product-footer">
-            <span class="product-price">${formatPrice(product.price)}</span>
-            <button type="button" class="product-select-btn" data-select="${product.id}" aria-label="Add ${product.name} to order">
+          <div class="product-description-slot">
+            ${product.description ? `<p class="product-description">${product.description}</p>` : ""}
+          </div>
+          <div class="product-footer${product.orderable === false ? " product-footer--price-only" : ""}">
+            <span class="product-price">${formatPrice(product.price)}${product.id === "a-la-carte" ? " each" : ""}</span>
+            ${
+              product.orderable !== false
+                ? `<button type="button" class="product-select-btn" data-select="${product.id}" aria-label="Add ${product.name} to order">
               Add to order
-            </button>
+            </button>`
+                : ""
+            }
           </div>
         </div>
       </article>
@@ -192,7 +244,237 @@
       });
     });
 
+    initProductCarousels();
+    initImageLightbox();
+    initALaCarteModal();
     updateProductBadges();
+  }
+
+  function getALaCarteProduct() {
+    return SITE_CONFIG.products.find((product) => product.id === "a-la-carte");
+  }
+
+  function renderALaCarteModalContent() {
+    const grid = document.getElementById("a-la-carte-grid");
+    const product = getALaCarteProduct();
+    if (!grid || !product?.items?.length) return;
+
+    grid.innerHTML = product.items
+      .map(
+        (item) => `
+      <article class="a-la-carte-item">
+        <button type="button" class="a-la-carte-image-btn" data-lightbox-set='${JSON.stringify([item.image])}' data-lightbox-index="0" aria-label="Enlarge ${item.name}">
+          <img class="a-la-carte-image" src="${item.image}" alt="${item.name}" loading="lazy">
+        </button>
+        <p class="a-la-carte-item-name">${item.name}</p>
+        <button type="button" class="btn btn-primary a-la-carte-add-btn" data-select="${item.id}">${formatPrice(item.price)} Add to Order</button>
+      </article>
+    `
+      )
+      .join("");
+
+    grid.querySelectorAll(".a-la-carte-add-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        Cart.add(btn.dataset.select);
+      });
+    });
+
+    initImageLightbox();
+  }
+
+  function initALaCarteModal() {
+    const modal = document.getElementById("a-la-carte-modal");
+    if (!modal) return;
+
+    renderALaCarteModalContent();
+
+    function openModal() {
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      modal.querySelector(".a-la-carte-close")?.focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    document.querySelectorAll("[data-a-la-carte-open]").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        if (e.target.closest(".product-select-btn")) return;
+        e.preventDefault();
+        openModal();
+      });
+
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openModal();
+        }
+      });
+    });
+
+    modal.querySelectorAll("[data-a-la-carte-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) {
+        closeModal();
+      }
+    });
+  }
+
+  function initProductCarousels() {
+    document.querySelectorAll(".product-carousel").forEach((carousel) => {
+      const slides = carousel.querySelectorAll(".product-carousel-slide");
+      const dots = carousel.querySelectorAll(".product-carousel-dot");
+      const prevBtn = carousel.querySelector(".product-carousel-arrow--prev");
+      const nextBtn = carousel.querySelector(".product-carousel-arrow--next");
+      if (!slides.length) return;
+
+      let current = 0;
+
+      function goTo(index) {
+        current = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("product-carousel-slide--active", i === current);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("product-carousel-dot--active", i === current);
+        });
+      }
+
+      prevBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        goTo(current - 1);
+      });
+
+      nextBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        goTo(current + 1);
+      });
+
+      dots.forEach((dot) => {
+        dot.addEventListener("click", (e) => {
+          e.stopPropagation();
+          goTo(Number(dot.dataset.slideTo));
+        });
+      });
+    });
+  }
+
+  let lightboxInitialized = false;
+  let lightboxImages = [];
+  let lightboxIndex = 0;
+  let lightboxAlt = "";
+
+  function initImageLightbox() {
+    const modal = document.getElementById("image-lightbox");
+    const lightboxImg = document.getElementById("image-lightbox-img");
+    const prevBtn = document.getElementById("image-lightbox-prev");
+    const nextBtn = document.getElementById("image-lightbox-next");
+    const dotsEl = document.getElementById("image-lightbox-dots");
+    if (!modal || !lightboxImg || !prevBtn || !nextBtn || !dotsEl) return;
+
+    function updateLightboxView() {
+      const src = lightboxImages[lightboxIndex];
+      if (!src) return;
+
+      lightboxImg.src = src;
+      lightboxImg.alt = lightboxAlt
+        ? `${lightboxAlt} — photo ${lightboxIndex + 1} of ${lightboxImages.length}`
+        : "";
+
+      const hasMultiple = lightboxImages.length > 1;
+      prevBtn.hidden = !hasMultiple;
+      nextBtn.hidden = !hasMultiple;
+      dotsEl.hidden = !hasMultiple;
+
+      if (hasMultiple) {
+        dotsEl.innerHTML = lightboxImages
+          .map(
+            (_, i) => `
+          <button type="button" class="image-lightbox-dot${i === lightboxIndex ? " image-lightbox-dot--active" : ""}" data-lightbox-dot="${i}" aria-label="Show photo ${i + 1}"></button>
+        `
+          )
+          .join("");
+
+        dotsEl.querySelectorAll("[data-lightbox-dot]").forEach((dot) => {
+          dot.addEventListener("click", (e) => {
+            e.stopPropagation();
+            lightboxIndex = Number(dot.dataset.lightboxDot);
+            updateLightboxView();
+          });
+        });
+      } else {
+        dotsEl.innerHTML = "";
+      }
+    }
+
+    function openLightbox(images, index, alt) {
+      lightboxImages = images;
+      lightboxIndex = index;
+      lightboxAlt = alt || "";
+      updateLightboxView();
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      modal.querySelector(".image-lightbox-close")?.focus();
+    }
+
+    function closeLightbox() {
+      modal.hidden = true;
+      lightboxImg.src = "";
+      lightboxImages = [];
+      lightboxIndex = 0;
+      document.body.style.overflow = "";
+    }
+
+    function goLightbox(delta) {
+      if (lightboxImages.length <= 1) return;
+      lightboxIndex = (lightboxIndex + delta + lightboxImages.length) % lightboxImages.length;
+      updateLightboxView();
+    }
+
+    if (!lightboxInitialized) {
+      lightboxInitialized = true;
+
+      prevBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        goLightbox(-1);
+      });
+
+      nextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        goLightbox(1);
+      });
+
+      modal.querySelectorAll("[data-lightbox-close]").forEach((el) => {
+        el.addEventListener("click", closeLightbox);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (modal.hidden) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") goLightbox(-1);
+        if (e.key === "ArrowRight") goLightbox(1);
+      });
+    }
+
+    document.querySelectorAll("[data-lightbox-set]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        let images = [];
+        try {
+          images = JSON.parse(btn.dataset.lightboxSet || "[]");
+        } catch {
+          images = [];
+        }
+        const index = Number(btn.dataset.lightboxIndex) || 0;
+        const img = btn.querySelector("img");
+        openLightbox(images, index, img?.alt?.split(" — ")[0] || "");
+      });
+    });
   }
 
   function renderPaymentMethods() {
@@ -227,10 +509,39 @@
     document.title = SITE_CONFIG.brandName + " — Father's Day Orders";
   }
 
+  function initAboutModal() {
+    const modal = document.getElementById("about");
+    const openBtn = document.getElementById("about-open");
+    if (!modal || !openBtn) return;
+
+    function openModal() {
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      modal.querySelector(".about-close")?.focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = "";
+      openBtn.focus();
+    }
+
+    openBtn.addEventListener("click", openModal);
+
+    modal.querySelectorAll("[data-about-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) {
+        closeModal();
+      }
+    });
+  }
+
   function resolveScrollTarget(hash) {
     const map = {
       "#menu": SCROLL_TARGETS.menu(),
-      "#products": SCROLL_TARGETS.menu(),
       "#cart-section": SCROLL_TARGETS.cart(),
       "#order": SCROLL_TARGETS.cart(),
       "#checkout-details": SCROLL_TARGETS.delivery(),
@@ -372,6 +683,7 @@
     });
     updateNavCartLabel();
     initSmoothScroll();
+    initAboutModal();
     initRevealOnScroll();
     initHeaderScroll();
   });

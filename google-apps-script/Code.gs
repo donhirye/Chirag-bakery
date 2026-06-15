@@ -1,5 +1,5 @@
 /**
- * Chirag's Bakery — Order Form Handler
+ * Chef Chirag — Order Form Handler
  *
  * Paste this into Google Apps Script (Extensions → Apps Script)
  * attached to your Google Sheet. See SETUP.md for full instructions.
@@ -71,7 +71,7 @@ function doPost(e) {
 
 function doGet() {
   return ContentService.createTextOutput(
-    JSON.stringify({ status: "ok", message: "Chirag's Bakery order endpoint is running." })
+    JSON.stringify({ status: "ok", message: "Chef Chirag order endpoint is running." })
   ).setMimeType(ContentService.MimeType.JSON);
 }
 

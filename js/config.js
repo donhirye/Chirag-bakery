@@ -1,10 +1,10 @@
 const SITE_CONFIG = {
-  brandName: "Chirag's Bakery",
+  brandName: "Chef Chirag",
   tagline: "Handcrafted cakes, cookies & treats — delivered to your door",
-  heroHeadline: "Sweet treats for Dad",
+  heroHeadline: "Gourmet Box",
   heroSubheadline: "delivered to your door",
   heroDescription:
-    "Celebrate Father's Day with freshly baked cakes, buttery cookies, and artisan pastries made with love.",
+    "Celebrate Father's Day with freshly baked goods from Chef\u00A0Chirag!",
   footerNote: "Father's Day orders — door-to-door delivery available",
 
   // Paste your Google Apps Script Web App URL here after setup (see SETUP.md)
@@ -13,49 +13,68 @@ const SITE_CONFIG = {
 
   paymentMethods: [
     "Cash on delivery",
-    "Venmo",
     "Zelle",
   ],
 
   paymentDetails: {
-    Venmo: {
-      label: "Send payment to this Venmo address:",
-      value: "venmoaddress@gmail.com",
-    },
     Zelle: {
       label: "Send payment to this Zelle address:",
-      value: "zelleaddress@gmail.com",
+      value: "modak.anagha@gmail.com",
     },
   },
 
   products: [
     {
       id: "bakery-box",
-      name: "Perfect bakery box",
-      description: "description",
+      name: "Perfect Bakery Box",
+      description: "",
       price: 20,
-      image: "assets/flyerpicschirag/24608.jpg",
+      image: "assets/flyerpicschirag/24592.jpg",
+      images: [
+        "assets/flyerpicschirag/24592.jpg",
+        "assets/flyerpicschirag/24605.jpg",
+        "assets/flyerpicschirag/24612.jpg",
+      ],
     },
     {
-      id: "cookies",
-      name: "Cookies",
-      description: "description",
-      price: 5,
-      image: "assets/flyerpicschirag/24609.jpg",
-    },
-    {
-      id: "pastries",
-      name: "Pastries",
-      description: "description",
-      price: 5,
-      image: "assets/flyerpicschirag/24612.jpg",
-    },
-    {
-      id: "berry-pastries",
-      name: "Pastries with berry filling",
-      description: "description",
-      price: 5,
-      image: "assets/flyerpicschirag/24613.jpg",
+      id: "a-la-carte",
+      name: "À la carte",
+      description: "Order individual items.",
+      price: 4,
+      orderable: false,
+      image: "assets/flyerpicschirag/24266.png",
+      items: [
+        {
+          id: "a-la-carte-24618",
+          name: "Blueberry Muffin",
+          price: 4,
+          image: "assets/flyerpicschirag/24618.jpg",
+        },
+        {
+          id: "a-la-carte-24621",
+          name: "Apple pie",
+          price: 4,
+          image: "assets/flyerpicschirag/24621.jpg",
+        },
+        {
+          id: "a-la-carte-24622",
+          name: "Blueberry Almond Danish",
+          price: 4,
+          image: "assets/flyerpicschirag/24622.jpg",
+        },
+        {
+          id: "a-la-carte-24619",
+          name: "S'mores Cookie",
+          price: 4,
+          image: "assets/flyerpicschirag/24619.jpg",
+        },
+        {
+          id: "a-la-carte-24620",
+          name: "Dubai Chocolate Cookie",
+          price: 4,
+          image: "assets/flyerpicschirag/24620.jpg",
+        },
+      ],
     },
   ],
 };

@@ -208,6 +208,11 @@
     });
   }
 
+  function allergyWarningHtml() {
+    if (!SITE_CONFIG.allergyWarning) return "";
+    return `<p class="allergy-warning">${SITE_CONFIG.allergyWarning}</p>`;
+  }
+
   function renderProducts() {
     const grid = document.getElementById("product-grid");
     if (!grid || !SITE_CONFIG.products) return;
@@ -232,6 +237,7 @@
                 : ""
             }
           </div>
+          ${product.id === "bakery-box" ? allergyWarningHtml() : ""}
         </div>
       </article>
     `
@@ -280,6 +286,12 @@
     });
 
     initImageLightbox();
+
+    const allergyEl = document.getElementById("a-la-carte-allergy-warning");
+    if (allergyEl) {
+      allergyEl.textContent = SITE_CONFIG.allergyWarning || "";
+      allergyEl.hidden = !SITE_CONFIG.allergyWarning;
+    }
   }
 
   function initALaCarteModal() {

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=41">
+  <link rel="stylesheet" href="css/styles.css?v=44">
 </head>
 <body>
   <header class="site-header">
@@ -118,7 +118,7 @@
               <div class="fulfillment-options pickup-time-options" id="pickup-time-options">
                 <label class="fulfillment-option">
                   <input type="radio" name="pickupTime" value="saturday" id="pickup-time-saturday">
-                  <span class="fulfillment-option-label">Saturday between 4-6</span>
+                  <span class="fulfillment-option-label">Saturday between 6-8 pm</span>
                 </label>
                 <label class="fulfillment-option">
                   <input type="radio" name="pickupTime" value="sunday" id="pickup-time-sunday">
@@ -147,7 +147,14 @@
               <!-- Options rendered by main.js -->
             </select>
             <div class="payment-info" id="payment-info" hidden aria-live="polite"></div>
+            <div class="zelle-payment-confirm" id="zelle-payment-confirm" hidden>
+              <label class="zelle-payment-confirm-label" for="zelle-payment-made">
+                <span class="zelle-payment-confirm-text">Payment Made?</span>
+                <input type="checkbox" id="zelle-payment-made" name="zellePaymentMade">
+              </label>
+            </div>
             <span class="form-error" id="error-payment" role="alert"></span>
+            <span class="form-error" id="error-zelle-payment" role="alert"></span>
           </div>
 
           <div class="form-actions">
@@ -240,6 +247,7 @@
       <button type="button" class="a-la-carte-close" data-a-la-carte-close aria-label="Close À la carte menu">&times;</button>
       <h2 class="a-la-carte-modal-title" id="a-la-carte-title">À la carte</h2>
       <div class="a-la-carte-grid" id="a-la-carte-grid"></div>
+      <p class="allergy-warning" id="a-la-carte-allergy-warning"></p>
     </div>
   </div>
 
@@ -254,9 +262,9 @@
     </div>
   </div>
 
-  <script src="js/config.js?v=11"></script>
+  <script src="js/config.js?v=13"></script>
   <script src="js/cart.js?v=12"></script>
-  <script src="js/main.js?v=19"></script>
-  <script src="js/form.js?v=9"></script>
+  <script src="js/main.js?v=20"></script>
+  <script src="js/form.js?v=10"></script>
 </body>
 </html>

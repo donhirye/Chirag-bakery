@@ -7,6 +7,8 @@ const SITE_CONFIG = {
     "Celebrate Father's Day with freshly baked goods from Chef\u00A0Chirag!",
   footerNote: "Father's Day orders — door-to-door delivery available",
 
+  allergyWarning: "Allergy warning: Contains nuts, gluten, and dairy.",
+
   // Paste your Google Apps Script Web App URL here after setup (see SETUP.md)
   googleScriptUrl:
     "https://script.google.com/macros/s/AKfycbzme_R8azNqOjzvTOwSpJCGc6pyNEEMjPw9Koh-64jLth8816rP7ZMo3qHAqOCvXC-1/exec",
@@ -27,7 +29,7 @@ const SITE_CONFIG = {
     {
       id: "bakery-box",
       name: "Perfect Bakery Box",
-      description: "",
+      description: "Includes 2 blueberry muffins, 2 specialty cookies, 1 apple pie, 1 almond danish.",
       price: 20,
       image: "assets/flyerpicschirag/24592.jpg",
       images: [

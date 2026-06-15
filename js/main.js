@@ -505,6 +505,7 @@
     const brandName = document.getElementById("brand-name");
     const heroHeadline = document.getElementById("hero-headline");
     const heroSubheadline = document.getElementById("hero-subheadline");
+    const heroDeliveryNote = document.getElementById("hero-delivery-note");
     const heroDescription = document.getElementById("hero-description");
     const footerBrand = document.getElementById("footer-brand");
     const footerNote = document.getElementById("footer-note");
@@ -513,6 +514,10 @@
     if (brandName) brandName.textContent = SITE_CONFIG.brandName;
     if (heroHeadline) heroHeadline.textContent = SITE_CONFIG.heroHeadline;
     if (heroSubheadline) heroSubheadline.textContent = SITE_CONFIG.heroSubheadline;
+    if (heroDeliveryNote) {
+      heroDeliveryNote.textContent = SITE_CONFIG.heroDeliveryNote || "";
+      heroDeliveryNote.hidden = !SITE_CONFIG.heroDeliveryNote;
+    }
     if (heroDescription) heroDescription.textContent = SITE_CONFIG.heroDescription;
     if (footerBrand) footerBrand.textContent = SITE_CONFIG.brandName;
     if (footerNote) footerNote.textContent = SITE_CONFIG.footerNote;

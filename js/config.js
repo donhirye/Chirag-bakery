@@ -3,6 +3,7 @@ const SITE_CONFIG = {
   tagline: "Handcrafted cakes, cookies & treats — delivered to your door",
   heroHeadline: "Gourmet Box",
   heroSubheadline: "delivered to your door",
+  heroDeliveryNote: "(home delivery available for Naperville and Aurora)",
   heroDescription:
     "Celebrate Father's Day with freshly baked goods from Chef\u00A0Chirag!",
   footerNote: "Father's Day orders — door-to-door delivery available",

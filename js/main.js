@@ -208,31 +208,19 @@
     });
   }
 
-  function ingredientsAllergensPanelsHtml() {
+  function ingredientsPanelsHtml() {
     const data = SITE_CONFIG.ingredientsAllergens;
-    if (!data) return "";
+    if (!data?.ingredients?.length) return "";
 
-    const ingredientsHtml = (data.ingredients || [])
+    const ingredientsHtml = data.ingredients
       .map(
         (item) => `
         <div class="ia-panel-item">
-          <h4 class="ia-panel-item-title">${item.name}</h4>
+          ${item.name ? `<h4 class="ia-panel-item-title">${item.name}</h4>` : ""}
           <p class="ia-panel-item-text">${item.list}</p>
         </div>
       `
       )
-      .join("");
-
-    const containsHtml = (data.contains || [])
-      .map((item) => `<li>${item}</li>`)
-      .join("");
-
-    const mayContainHtml = (data.mayContain || [])
-      .map((item) => `<li>${item}</li>`)
-      .join("");
-
-    const disclosureHtml = (data.allergenDisclosure || [])
-      .map((item) => `<li>${item}</li>`)
       .join("");
 
     return `
@@ -241,51 +229,33 @@
           <h3 class="ia-panel-title" id="ia-ingredients-heading">Ingredients</h3>
           <div class="ia-panel-body">${ingredientsHtml}</div>
         </section>
-        <section class="ia-panel ia-panel--allergens" aria-labelledby="ia-allergens-heading">
-          <h3 class="ia-panel-title" id="ia-allergens-heading">Allergens</h3>
-          <div class="ia-panel-body">
-            <p class="ia-summary">${data.summary || ""}</p>
-            <div class="ia-allergen-group">
-              <h4 class="ia-allergen-label">Contains</h4>
-              <ul class="ia-allergen-list">${containsHtml}</ul>
-            </div>
-            <div class="ia-allergen-group">
-              <h4 class="ia-allergen-label">May contain</h4>
-              <ul class="ia-allergen-list">${mayContainHtml}</ul>
-            </div>
-            <div class="ia-allergen-group">
-              <h4 class="ia-allergen-label">Allergen disclosure</h4>
-              <ul class="ia-allergen-list ia-allergen-list--disclosure">${disclosureHtml}</ul>
-            </div>
-          </div>
-        </section>
       </div>
     `;
   }
 
-  function allergyWarningHtml(expandedId) {
-    if (!SITE_CONFIG.allergyWarning) return "";
+  function ingredientsInfoHtml(expandedId) {
+    const panels = ingredientsPanelsHtml();
+    if (!panels) return "";
 
-    const detailsId = expandedId || `allergy-details-${Math.random().toString(36).slice(2, 9)}`;
+    const detailsId = expandedId || `ingredients-details-${Math.random().toString(36).slice(2, 9)}`;
 
     return `
       <div class="allergy-warning-block" data-allergy-expand>
         <div class="allergy-warning-row">
-          <p class="allergy-warning">${SITE_CONFIG.allergyWarning}</p>
           <button
             type="button"
             class="allergy-info-btn"
             aria-expanded="false"
             aria-controls="${detailsId}"
-            aria-label="Show ingredients and allergens"
-            title="Ingredients and allergens"
+            aria-label="Show ingredients"
+            title="Ingredients"
           >
             <span class="allergy-info-star" aria-hidden="true">&#9733;</span>
             <span class="allergy-info-label">more info</span>
           </button>
         </div>
         <div class="allergy-details" id="${detailsId}" hidden>
-          ${ingredientsAllergensPanelsHtml()}
+          ${panels}
         </div>
       </div>
     `;
@@ -307,13 +277,85 @@
     });
   }
 
+  function contactModalHtml() {
+    const contact = SITE_CONFIG.contact;
+    if (!contact?.phone && !contact?.email) return "";
+
+    const rows = [];
+
+    if (contact.phone) {
+      const phoneHref = `tel:${contact.phone.replace(/\D/g, "")}`;
+      rows.push(`
+        <div class="contact-details-row">
+          <p class="contact-details-label">Phone</p>
+          <p class="contact-details-value"><a href="${phoneHref}">${contact.phone}</a></p>
+        </div>
+      `);
+    }
+
+    if (contact.email) {
+      rows.push(`
+        <div class="contact-details-row">
+          <p class="contact-details-label">Email</p>
+          <p class="contact-details-value"><a href="mailto:${contact.email}">${contact.email}</a></p>
+        </div>
+      `);
+    }
+
+    return `<div class="contact-details">${rows.join("")}</div>`;
+  }
+
+  function initContactModal() {
+    const openBtn = document.getElementById("header-contact-open");
+    const modal = document.getElementById("contact-modal");
+    const body = document.getElementById("contact-modal-body");
+    const title = document.getElementById("contact-modal-title");
+    if (!openBtn || !modal || !body) return;
+
+    const contact = SITE_CONFIG.contact;
+    const hasContact = contact?.phone || contact?.email;
+    openBtn.hidden = !hasContact;
+
+    if (!hasContact) return;
+
+    if (title && contact?.label) {
+      title.textContent = contact.label;
+    }
+    openBtn.textContent = contact?.label || "Contact us";
+    body.innerHTML = contactModalHtml();
+
+    function openModal() {
+      modal.hidden = false;
+      document.body.classList.add("contact-modal-open");
+      modal.querySelector(".contact-modal-close")?.focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.classList.remove("contact-modal-open");
+      openBtn.focus();
+    }
+
+    openBtn.addEventListener("click", openModal);
+
+    modal.querySelectorAll("[data-contact-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) {
+        closeModal();
+      }
+    });
+  }
+
   function initIngredientsAllergensBar() {
     const openBtn = document.getElementById("ingredients-allergens-open");
     const modal = document.getElementById("ingredients-allergens-modal");
     const content = document.getElementById("ingredients-allergens-content");
     if (!openBtn || !modal || !content) return;
 
-    content.innerHTML = ingredientsAllergensPanelsHtml();
+    content.innerHTML = ingredientsPanelsHtml();
 
     function openModal() {
       modal.hidden = false;
@@ -366,7 +408,7 @@
                 : ""
             }
           </div>
-          ${product.id === "bakery-box" ? allergyWarningHtml("bakery-box-allergy-details") : ""}
+          ${product.id === "bakery-box" ? ingredientsInfoHtml("bakery-box-ingredients-details") : ""}
         </div>
       </article>
     `
@@ -419,8 +461,8 @@
 
     const allergyEl = document.getElementById("a-la-carte-allergy-warning");
     if (allergyEl) {
-      if (SITE_CONFIG.allergyWarning) {
-        allergyEl.innerHTML = allergyWarningHtml("a-la-carte-allergy-details");
+      if (SITE_CONFIG.ingredientsAllergens?.ingredients?.length) {
+        allergyEl.innerHTML = ingredientsInfoHtml("a-la-carte-ingredients-details");
         allergyEl.hidden = false;
         initAllergyExpandToggles(allergyEl);
       } else {
@@ -666,6 +708,7 @@
     if (headerYoutubeHandle) {
       headerYoutubeHandle.textContent = SITE_CONFIG.youtube?.handle || "";
     }
+
     if (heroDescription) heroDescription.textContent = SITE_CONFIG.heroDescription;
     if (footerBrand) footerBrand.textContent = SITE_CONFIG.brandName;
     if (footerNote) footerNote.textContent = SITE_CONFIG.footerNote;
@@ -820,6 +863,7 @@
     initSmoothScroll();
     initRevealOnScroll();
     initHeaderScroll();
+    initContactModal();
     initIngredientsAllergensBar();
   });
 })();

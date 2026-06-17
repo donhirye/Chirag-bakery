@@ -31,7 +31,7 @@
 
   --ingredients-bar-height: 3.25rem;
 
-  --header-height: calc(1in + 2.5rem);
+  --header-height: calc(1in + 3rem);
   --container-padding: 1.25rem;
   --section-spacing: 4.5rem;
 
@@ -126,6 +126,36 @@ textarea {
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  gap: 1rem;
+}
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.header-contact-btn {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--color-walnut);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.header-contact-btn:hover {
+  background: var(--color-cream-dark);
+  border-color: rgba(201, 162, 39, 0.45);
+  color: var(--color-burgundy);
 }
 
 .logo {
@@ -1099,6 +1129,113 @@ body.ingredients-allergens-modal-open {
   overflow: hidden;
 }
 
+/* Contact modal */
+
+.contact-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 390;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--container-padding);
+}
+
+.contact-modal[hidden] {
+  display: none !important;
+}
+
+.contact-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(61, 44, 46, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.contact-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 24rem;
+  padding: 2rem 1.25rem 1.5rem;
+  background: linear-gradient(180deg, var(--pastel-butter) 0%, var(--pastel-blush) 100%);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.contact-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-walnut);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.contact-modal-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 3.5vw, 1.5rem);
+  font-weight: 600;
+  color: var(--color-walnut);
+  text-align: center;
+  margin: 0 0 1.25rem;
+}
+
+.contact-details {
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-details-row {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.contact-details-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.contact-details-value {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.contact-details-value a {
+  color: var(--color-walnut);
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.contact-details-value a:hover {
+  color: var(--color-burgundy);
+  text-decoration: underline;
+}
+
+body.contact-modal-open {
+  overflow: hidden;
+}
+
 .product-price {
   font-weight: 700;
   font-size: 1.1rem;
@@ -1939,7 +2076,7 @@ body.has-cart-bar {
 
 @media (min-width: 1024px) {
   :root {
-    --header-height: calc(1in + 2.75rem);
+    --header-height: calc(1in + 3.25rem);
     --section-spacing: 6.5rem;
   }
 

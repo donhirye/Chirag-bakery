@@ -13,38 +13,17 @@ const SITE_CONFIG = {
     handle: "@ChefChiragcooking",
   },
 
-  allergyWarning: "Allergy warning: Contains milk, eggs, tree nuts, wheat, peanuts, and soybeans.",
+  contact: {
+    label: "Contact us",
+    phone: "812-345-2897",
+    email: "anaghaphadke3@gmail.com",
+  },
 
   ingredientsAllergens: {
-    summary:
-      "Contains milk, eggs, tree nuts, wheat, peanuts, and soybeans. May contain shellfish and fish.",
-    contains: ["Milk", "Eggs", "Tree nuts", "Wheat", "Peanuts", "Soybeans"],
-    mayContain: ["Shellfish", "Fish"],
-    allergenDisclosure: [
-      "Milk",
-      "Eggs",
-      "Fish",
-      "Shellfish",
-      "Tree nuts",
-      "Peanuts",
-      "Wheat",
-      "Soybean",
-    ],
     ingredients: [
       {
-        name: "Cookies",
         list:
-          "Flour, sugar, eggs, baking soda, baking powder, salt, halal vanilla, marshmallow (corn syrup, water, dextrose, halal gelatin, corn starch, artificial vanilla flavor, potassium sorbate), pistachio cream (pistachio, sugar, non-hydrogenated vegetable fats, milk powder, extra virgin olive oil, emulsifier: soy lecithin), Hershey's chocolate.",
-      },
-      {
-        name: "Pies",
-        list:
-          "Flour, water, butter, sugar, molasses, halal vanilla, apples, lemon, salt, cinnamon.",
-      },
-      {
-        name: "Muffins",
-        list:
-          "Flour, milk, sugar, eggs, halal vanilla, blueberries, baking powder, salt.",
+          "Apples, baking powder, baking soda, blueberries, butter, cinnamon, eggs, flour, Hershey's chocolate, lemon, marshmallow, milk, pistachio cream, salt, sugar, vanilla, water.",
       },
     ],
   },

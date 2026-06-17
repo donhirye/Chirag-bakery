@@ -8,14 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=51">
+  <link rel="stylesheet" href="css/styles.css?v=53">
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a href="#" class="logo" data-scroll-top>
-        <span class="logo-text" id="brand-name">Chef Chirag</span>
-      </a>
+      <div class="header-brand">
+        <a href="#" class="logo" data-scroll-top>
+          <span class="logo-text" id="brand-name">Chef Chirag</span>
+        </a>
+        <button type="button" class="header-contact-btn" id="header-contact-open" hidden>
+          Contact us
+        </button>
+      </div>
       <a
         href="https://www.youtube.com/@ChefChiragcooking/shorts"
         class="header-youtube"
@@ -220,21 +225,30 @@
   </div>
 
   <button type="button" class="ingredients-allergens-bar" id="ingredients-allergens-open">
-    Ingredients and Allergens
+    Ingredients
   </button>
 
   <div class="ingredients-allergens-modal" id="ingredients-allergens-modal" hidden role="dialog" aria-modal="true" aria-labelledby="ingredients-allergens-title">
     <div class="ingredients-allergens-backdrop" data-ingredients-allergens-close tabindex="-1" aria-hidden="true"></div>
     <div class="ingredients-allergens-panel">
-      <button type="button" class="ingredients-allergens-close" data-ingredients-allergens-close aria-label="Close ingredients and allergens">&times;</button>
-      <h2 class="ingredients-allergens-title" id="ingredients-allergens-title">Ingredients and Allergens</h2>
+      <button type="button" class="ingredients-allergens-close" data-ingredients-allergens-close aria-label="Close ingredients">&times;</button>
+      <h2 class="ingredients-allergens-title" id="ingredients-allergens-title">Ingredients</h2>
       <div id="ingredients-allergens-content"></div>
     </div>
   </div>
 
-  <script src="js/config.js?v=19"></script>
+  <div class="contact-modal" id="contact-modal" hidden role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+    <div class="contact-modal-backdrop" data-contact-close tabindex="-1" aria-hidden="true"></div>
+    <div class="contact-modal-panel">
+      <button type="button" class="contact-modal-close" data-contact-close aria-label="Close contact">&times;</button>
+      <h2 class="contact-modal-title" id="contact-modal-title">Contact us</h2>
+      <div class="contact-modal-body" id="contact-modal-body"></div>
+    </div>
+  </div>
+
+  <script src="js/config.js?v=25"></script>
   <script src="js/cart.js?v=12"></script>
-  <script src="js/main.js?v=25"></script>
+  <script src="js/main.js?v=28"></script>
   <script src="js/form.js?v=13"></script>
 </body>
 </html>

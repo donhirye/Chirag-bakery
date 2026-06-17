@@ -127,32 +127,12 @@ textarea {
 }
 
 .logo {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
   font-family: var(--font-serif);
   font-weight: 600;
   font-size: 1.1rem;
   color: var(--color-walnut);
-}
-
-.logo-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.logo-avatar {
-  width: 1in;
-  height: 1in;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center center;
-  border: 2px solid var(--color-gold);
-  box-shadow: var(--shadow-sm);
-  flex-shrink: 0;
-  image-rendering: auto;
 }
 
 .logo-icon {

@@ -526,36 +526,6 @@
     document.title = SITE_CONFIG.brandName + " — Father's Day Orders";
   }
 
-  function initAboutModal() {
-    const modal = document.getElementById("about");
-    const openBtn = document.getElementById("about-open");
-    if (!modal || !openBtn) return;
-
-    function openModal() {
-      modal.hidden = false;
-      document.body.style.overflow = "hidden";
-      modal.querySelector(".about-close")?.focus();
-    }
-
-    function closeModal() {
-      modal.hidden = true;
-      document.body.style.overflow = "";
-      openBtn.focus();
-    }
-
-    openBtn.addEventListener("click", openModal);
-
-    modal.querySelectorAll("[data-about-close]").forEach((el) => {
-      el.addEventListener("click", closeModal);
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !modal.hidden) {
-        closeModal();
-      }
-    });
-  }
-
   function resolveScrollTarget(hash) {
     const map = {
       "#menu": SCROLL_TARGETS.menu(),
@@ -700,7 +670,6 @@
     });
     updateNavCartLabel();
     initSmoothScroll();
-    initAboutModal();
     initRevealOnScroll();
     initHeaderScroll();
   });

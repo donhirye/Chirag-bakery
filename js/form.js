@@ -220,8 +220,14 @@
       saturday: "Saturday between 6-8 pm",
       sunday: "Sunday between 8-10 am",
     };
+    const pickupDayLabels = {
+      saturday: "Saturday",
+      sunday: "Sunday",
+    };
     const pickupTimeLabel =
       fulfillmentType === "pickup" && pickupTime ? pickupTimeLabels[pickupTime] : "";
+    const pickupDayLabel =
+      fulfillmentType === "pickup" && pickupTime ? pickupDayLabels[pickupTime] || "" : "";
 
     return valid
       ? {
@@ -231,6 +237,7 @@
           address: fulfillmentType === "pickup" ? pickupAddress : address,
           fulfillmentType: fulfillmentType === "pickup" ? "Pick up" : "Delivery",
           pickupTime: pickupTimeLabel,
+          pickupDay: pickupDayLabel,
           paymentMethod: payment,
           specialRequirements: "",
         }

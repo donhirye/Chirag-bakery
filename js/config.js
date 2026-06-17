@@ -8,7 +8,46 @@ const SITE_CONFIG = {
     "Celebrate Father's Day with freshly baked goods from Chef\u00A0Chirag!",
   footerNote: "Father's Day orders — door-to-door delivery available",
 
-  allergyWarning: "Allergy warning: Contains nuts, gluten, and dairy.",
+  youtube: {
+    url: "https://www.youtube.com/@ChefChiragcooking/shorts",
+    handle: "@ChefChiragcooking",
+  },
+
+  allergyWarning: "Allergy warning: Contains milk, eggs, tree nuts, wheat, peanuts, and soybeans.",
+
+  ingredientsAllergens: {
+    summary:
+      "Contains milk, eggs, tree nuts, wheat, peanuts, and soybeans. May contain shellfish and fish.",
+    contains: ["Milk", "Eggs", "Tree nuts", "Wheat", "Peanuts", "Soybeans"],
+    mayContain: ["Shellfish", "Fish"],
+    allergenDisclosure: [
+      "Milk",
+      "Eggs",
+      "Fish",
+      "Shellfish",
+      "Tree nuts",
+      "Peanuts",
+      "Wheat",
+      "Soybean",
+    ],
+    ingredients: [
+      {
+        name: "Cookies",
+        list:
+          "Flour, sugar, eggs, baking soda, baking powder, salt, halal vanilla, marshmallow (corn syrup, water, dextrose, halal gelatin, corn starch, artificial vanilla flavor, potassium sorbate), pistachio cream (pistachio, sugar, non-hydrogenated vegetable fats, milk powder, extra virgin olive oil, emulsifier: soy lecithin), Hershey's chocolate.",
+      },
+      {
+        name: "Pies",
+        list:
+          "Flour, water, butter, sugar, molasses, halal vanilla, apples, lemon, salt, cinnamon.",
+      },
+      {
+        name: "Muffins",
+        list:
+          "Flour, milk, sugar, eggs, halal vanilla, blueberries, baking powder, salt.",
+      },
+    ],
+  },
 
   // Paste your Google Apps Script Web App URL here after setup (see SETUP.md)
   googleScriptUrl:

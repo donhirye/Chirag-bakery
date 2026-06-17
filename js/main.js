@@ -208,9 +208,138 @@
     });
   }
 
-  function allergyWarningHtml() {
+  function ingredientsAllergensPanelsHtml() {
+    const data = SITE_CONFIG.ingredientsAllergens;
+    if (!data) return "";
+
+    const ingredientsHtml = (data.ingredients || [])
+      .map(
+        (item) => `
+        <div class="ia-panel-item">
+          <h4 class="ia-panel-item-title">${item.name}</h4>
+          <p class="ia-panel-item-text">${item.list}</p>
+        </div>
+      `
+      )
+      .join("");
+
+    const containsHtml = (data.contains || [])
+      .map((item) => `<li>${item}</li>`)
+      .join("");
+
+    const mayContainHtml = (data.mayContain || [])
+      .map((item) => `<li>${item}</li>`)
+      .join("");
+
+    const disclosureHtml = (data.allergenDisclosure || [])
+      .map((item) => `<li>${item}</li>`)
+      .join("");
+
+    return `
+      <div class="ia-panels">
+        <section class="ia-panel ia-panel--ingredients" aria-labelledby="ia-ingredients-heading">
+          <h3 class="ia-panel-title" id="ia-ingredients-heading">Ingredients</h3>
+          <div class="ia-panel-body">${ingredientsHtml}</div>
+        </section>
+        <section class="ia-panel ia-panel--allergens" aria-labelledby="ia-allergens-heading">
+          <h3 class="ia-panel-title" id="ia-allergens-heading">Allergens</h3>
+          <div class="ia-panel-body">
+            <p class="ia-summary">${data.summary || ""}</p>
+            <div class="ia-allergen-group">
+              <h4 class="ia-allergen-label">Contains</h4>
+              <ul class="ia-allergen-list">${containsHtml}</ul>
+            </div>
+            <div class="ia-allergen-group">
+              <h4 class="ia-allergen-label">May contain</h4>
+              <ul class="ia-allergen-list">${mayContainHtml}</ul>
+            </div>
+            <div class="ia-allergen-group">
+              <h4 class="ia-allergen-label">Allergen disclosure</h4>
+              <ul class="ia-allergen-list ia-allergen-list--disclosure">${disclosureHtml}</ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    `;
+  }
+
+  function allergyWarningHtml(expandedId) {
     if (!SITE_CONFIG.allergyWarning) return "";
-    return `<p class="allergy-warning">${SITE_CONFIG.allergyWarning}</p>`;
+
+    const detailsId = expandedId || `allergy-details-${Math.random().toString(36).slice(2, 9)}`;
+
+    return `
+      <div class="allergy-warning-block" data-allergy-expand>
+        <div class="allergy-warning-row">
+          <p class="allergy-warning">${SITE_CONFIG.allergyWarning}</p>
+          <button
+            type="button"
+            class="allergy-info-btn"
+            aria-expanded="false"
+            aria-controls="${detailsId}"
+            aria-label="Show ingredients and allergens"
+            title="Ingredients and allergens"
+          >
+            <span class="allergy-info-star" aria-hidden="true">&#9733;</span>
+            <span class="allergy-info-label">more info</span>
+          </button>
+        </div>
+        <div class="allergy-details" id="${detailsId}" hidden>
+          ${ingredientsAllergensPanelsHtml()}
+        </div>
+      </div>
+    `;
+  }
+
+  function initAllergyExpandToggles(root = document) {
+    root.querySelectorAll("[data-allergy-expand]").forEach((block) => {
+      const btn = block.querySelector(".allergy-info-btn");
+      const details = block.querySelector(".allergy-details");
+      if (!btn || !details || btn.dataset.bound === "true") return;
+
+      btn.dataset.bound = "true";
+      btn.addEventListener("click", () => {
+        const isOpen = !details.hidden;
+        details.hidden = isOpen;
+        btn.setAttribute("aria-expanded", String(!isOpen));
+        block.classList.toggle("allergy-warning-block--open", !isOpen);
+      });
+    });
+  }
+
+  function initIngredientsAllergensBar() {
+    const openBtn = document.getElementById("ingredients-allergens-open");
+    const modal = document.getElementById("ingredients-allergens-modal");
+    const content = document.getElementById("ingredients-allergens-content");
+    if (!openBtn || !modal || !content) return;
+
+    content.innerHTML = ingredientsAllergensPanelsHtml();
+
+    function openModal() {
+      modal.hidden = false;
+      document.body.classList.add("ingredients-allergens-modal-open");
+      modal.querySelector(".ingredients-allergens-close")?.focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.classList.remove("ingredients-allergens-modal-open");
+      openBtn.focus();
+    }
+
+    openBtn.addEventListener("click", openModal);
+
+    document.body.classList.add("has-ingredients-bar");
+
+    modal.querySelectorAll("[data-ingredients-allergens-close]").forEach((el) => {
+      el.addEventListener("click", closeModal);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) {
+        closeModal();
+      }
+    });
   }
 
   function renderProducts() {
@@ -237,7 +366,7 @@
                 : ""
             }
           </div>
-          ${product.id === "bakery-box" ? allergyWarningHtml() : ""}
+          ${product.id === "bakery-box" ? allergyWarningHtml("bakery-box-allergy-details") : ""}
         </div>
       </article>
     `
@@ -253,6 +382,7 @@
     initProductCarousels();
     initImageLightbox();
     initALaCarteModal();
+    initAllergyExpandToggles(grid);
     updateProductBadges();
   }
 
@@ -289,8 +419,14 @@
 
     const allergyEl = document.getElementById("a-la-carte-allergy-warning");
     if (allergyEl) {
-      allergyEl.textContent = SITE_CONFIG.allergyWarning || "";
-      allergyEl.hidden = !SITE_CONFIG.allergyWarning;
+      if (SITE_CONFIG.allergyWarning) {
+        allergyEl.innerHTML = allergyWarningHtml("a-la-carte-allergy-details");
+        allergyEl.hidden = false;
+        initAllergyExpandToggles(allergyEl);
+      } else {
+        allergyEl.innerHTML = "";
+        allergyEl.hidden = true;
+      }
     }
   }
 
@@ -518,6 +654,18 @@
       heroDeliveryNote.textContent = SITE_CONFIG.heroDeliveryNote || "";
       heroDeliveryNote.hidden = !SITE_CONFIG.heroDeliveryNote;
     }
+    const headerYoutube = document.getElementById("header-youtube");
+    const headerYoutubeHandle = document.getElementById("header-youtube-handle");
+    if (headerYoutube && SITE_CONFIG.youtube?.url) {
+      headerYoutube.href = SITE_CONFIG.youtube.url;
+      headerYoutube.setAttribute(
+        "aria-label",
+        `${SITE_CONFIG.youtube.handle || "YouTube"} on YouTube`
+      );
+    }
+    if (headerYoutubeHandle) {
+      headerYoutubeHandle.textContent = SITE_CONFIG.youtube?.handle || "";
+    }
     if (heroDescription) heroDescription.textContent = SITE_CONFIG.heroDescription;
     if (footerBrand) footerBrand.textContent = SITE_CONFIG.brandName;
     if (footerNote) footerNote.textContent = SITE_CONFIG.footerNote;
@@ -672,5 +820,6 @@
     initSmoothScroll();
     initRevealOnScroll();
     initHeaderScroll();
+    initIngredientsAllergensBar();
   });
 })();

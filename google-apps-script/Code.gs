@@ -38,6 +38,8 @@ const ORDER_HEADERS = [
 
   "Pick Up Time",
 
+  "Pick Up Day",
+
   "Payment Method",
 
   "Special Requirements",
@@ -54,13 +56,17 @@ function getOrderSheet() {
 
   if (SHEET_NAME) {
 
-    const namedSheet = spreadsheet.getSheetByName(SHEET_NAME);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
 
-    if (namedSheet) {
+    if (!sheet) {
 
-      return namedSheet;
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+
+      applyOrderHeaders(sheet);
 
     }
+
+    return sheet;
 
   }
 
@@ -171,6 +177,8 @@ function doPost(e) {
       data.fulfillmentType || "",
 
       data.pickupTime || "",
+
+      data.pickupDay || "",
 
       data.paymentMethod || "",
 
@@ -321,6 +329,8 @@ function testOrderWrite() {
       fulfillmentType: "Pick up",
 
       pickupTime: "Saturday between 6-8 pm",
+
+      pickupDay: "Saturday",
 
       paymentMethod: "Zelle",
 
